@@ -40,6 +40,15 @@ Route::get('/admin/orders/printlabel/{id}', [ 'as' => 'admin.orders.printlabel',
 
 Route::patch('/admin/orders', ['as' => 'admin.orders.massedit', 'uses' => 'OrderController@massEdit']);
 
+Route::post('pull', function() {
+	Log::info('PULL INFO' . $_POST);
+	if ( $_POST['payload'] ) {
+  		shell_exec( 'git pull' );
+  		return 'Git Pull OK';
+	}
+	return 'Nie pobrano..';
+});
+
 Route::get('test', function() {
 	return View::make('phpinfo');
 });
