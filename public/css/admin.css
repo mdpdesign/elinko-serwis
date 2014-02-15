@@ -1,0 +1,109 @@
+body {
+	padding-top: 70px;
+	padding-bottom: 70px;
+	background-color: #fff;
+}
+
+.block-span {
+	display: block;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.1;
+	border-radius: 4px;
+	color: #999;
+	border: 1px solid #ddd;
+	margin-bottom: 20px;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+	vertical-align: middle;
+}
+
+.table > tbody > tr > td.rma_details {
+	padding: 0;
+}
+
+.details-wrapper {
+	margin: 0 0 8px 0;
+}
+
+.input-row {
+	margin-bottom: 1em;
+}
+
+.input-inline {
+	margin-right: 1em;
+	display: inline-block;
+}
+
+.input-inline.bottom {
+	margin-top: 1em;
+}
+
+.page-header {
+	padding-bottom: 9px;
+	margin: 0 0 20px;
+	border-bottom: 1px solid #eee;
+}
+
+.details-table, .rma-table {
+	margin: 0;
+	font-size: 12px;
+}
+
+.rma-link {
+	color: black;
+}
+
+/* SZEROKOSCI KOLUMN NA LISCIE ZLECEN */
+th.id-column {
+	width: 2%;
+}
+th.status {
+	width: 12%;
+}
+th.rma {
+	width: 13%;
+}
+th.item {
+	width: 22%;
+}
+th.client {
+	width: 15%;
+}
+th.phone {
+	width: 10%;
+}
+th.branch {
+	width: 9%;
+}
+.edit-cell {
+	width: 150px;
+}
+/* tabela detali*/
+th.serial {
+	width: 18%;
+} 
+th.document {
+	width: 11%;
+}
+th.service {
+	width: 9%;
+}
+th.description {
+	width: 20%;
+}
+th.comment {
+	width: 20%;
+}
+th.accessories {
+	width: 15%;
+}
+th.netto, th.brutto {
+	width: 7%;
+}
+
+/* paginacja */
+.pagination-wrapper {
+	text-align: center;
+}

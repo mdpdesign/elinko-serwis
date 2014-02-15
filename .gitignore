@@ -1,0 +1,15 @@
+/bootstrap/compiled.php
+/bootstrap/environment.php
+/vendor
+/nbproject
+/app/database/seeds
+/app/config/database.php
+/app/config/dev
+/app/config/remote
+composer.phar
+composer.lock
+_ide_helper.php
+.env.local.php
+.env.php
+.DS_Store
+Thumbs.db
