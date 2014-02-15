@@ -80,7 +80,7 @@
 
 				<div class="row credits">
 					<div class="-col-md-12">
-						Projekt i wykonanie <a href="www.mdpdesign.pl">mdpdesign.pl</a>&copy; {{ date('Y') }}
+						Projekt i wykonanie <a href="www.mdpdesign.pl">mdpdesign.pl</a> &copy; {{ date('Y') }}
 					</div>
 				</div>
 
