@@ -18,19 +18,23 @@
 	<div class="col-md-12">
 		<div class="input-row">
 			<span class="input-inline">
-				{{ Form::label('status', 'Status')}}
+				{{ Form::label('status', 'Status') }}
 				{{ Form::select('status', (['' => 'Wszystkie'] + $statuses), Input::get('status', ''), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
-				{{ Form::label('branch', 'Oddział')}}
+				{{ Form::label('branch', 'Oddział') }}
 				{{ Form::select('branch', (['' => 'Wszystkie'] + $branches), Input::get('branch', ''), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
-				{{ Form::label('order', 'Kolejność')}}
+				{{ Form::label('order', 'Kolejność') }}
 				{{ Form::select('order', ['DESC' => 'Od najnowszych', 'ASC' => 'Od najstarszych'], Input::get('order'), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
-				{{ Form::submit('Sortuj', ['class' => 'btn btn-default btn-sm']) }}
+				{{ Form::label('perpage', 'Wyników na stronie') }}
+				{{ Form::select('perpage', ['10' => '10', '20' => '20', '30' => '30', '50' => '50', '100' => '100'], Input::get('perpage', '20'), ['class' => 'form-control input-sm']) }}
+			</span>
+			<span class="input-inline">
+				{{ Form::submit('Pokaż', ['class' => 'btn btn-default btn-sm']) }}
 			</span>
 		</div>
 	</div>

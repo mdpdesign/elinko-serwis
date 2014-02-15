@@ -35,7 +35,7 @@ class OrderController extends BaseController {
 			if (Input::get('search'))
 			{
 				$term = Input::get('search');
-				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'DESC'), Input::get('status'), Input::get('branch'))->paginate(20);
+				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'DESC'), Input::get('status'), Input::get('branch'))->paginate(Input::get('perpage', 20));
 				
 				// jesli kolekcja nie spelnia kryteriow wyszukiwania pokaz informacje
 				if ($orders->isEmpty())
@@ -56,7 +56,7 @@ class OrderController extends BaseController {
 				// jesli filtrujemy wyniki
 				if (Input::has('status') or Input::has('branch') or Input::has('order'))
 				{
-					$orders =  $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->paginate(20);
+					$orders =  $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->paginate(Input::get('perpage', 20));
 
 					return View::make('orders.index')->withUser($user)
 					->withOrders($orders)
@@ -65,7 +65,7 @@ class OrderController extends BaseController {
 					->withInput(Input::except('search'));
 				}
 				// nie wyszukujemy, nie filtrujemy, pokaz wszystkie zlecenia
-				$orders = $this->orders->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(20);
+				$orders = $this->orders->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
 
 				return View::make('orders.index')->withUser($user)
 				->withOrders($orders)
