@@ -74,7 +74,7 @@
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
 						<td>
 							@if ($order->status->first()->id == 1)
-								<span class="text-danger">{{ $order->status->first()->name }}</span>
+								<span class="text-danger"><strong>{{ $order->status->first()->name }}</strong></span>
 							@else 
 								{{ $order->status->first()->name }}
 							@endif
