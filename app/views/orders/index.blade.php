@@ -52,8 +52,6 @@
 						<th class="id-checkbox">{{ Form::checkbox('id-all', null, null, ['id' => 'check-all']) }}</th>
 						<th class="status">
 							{{ trans('admin.message.order_status') }}
-							{{-- Form::select('status_id', $statuses, null, ['class' => 'status-order form-control input-sm']) --}}
-							{{-- link_to_route('admin.orders.index', 'Status', ['orderBy' => 'status_id']) --}}
 						</th>
 						<th class="rma">{{ trans('admin.message.order_rma') }}</th>
 						<th class="item">{{ trans('admin.message.order_item') }}</th>
@@ -74,7 +72,7 @@
 					<tr class="rma-table-heading">
 						<td><strong>{{ $order->id }}</strong></td>
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
-						<td>{{ $order->status->first()->name }}</td>
+						<td><span class="text-danger">{{ $order->status->first()->name }}</span></td>
 						<td><strong>{{ link_to_route('admin.orders.show', $order->rma_number, $order->id, ['class' => 'rma-link', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => trans('admin.message.order_show')]) }}</strong></td>
 						<td>{{ $order->item }}</td>
 						<td>{{ $order->client }}</td>
