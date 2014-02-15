@@ -41,11 +41,12 @@ Route::get('/admin/orders/printlabel/{id}', [ 'as' => 'admin.orders.printlabel',
 Route::patch('/admin/orders', ['as' => 'admin.orders.massedit', 'uses' => 'OrderController@massEdit']);
 
 Route::post('pull', function() {
-	Log::info('PULL INFO' . var_dump($_POST));
 	if ( $_POST['payload'] ) {
   		shell_exec( 'git pull' );
+  		Log::info('PULL Event OK :)');
   		return 'Git Pull OK';
 	}
+	Log::info('PULL Event BAD :(');
 	return 'Nie pobrano..';
 });
 
