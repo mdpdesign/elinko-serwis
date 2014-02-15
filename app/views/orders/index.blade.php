@@ -72,7 +72,13 @@
 					<tr class="rma-table-heading">
 						<td><strong>{{ $order->id }}</strong></td>
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
-						<td><span class="text-danger">{{ $order->status->first()->name }}</span></td>
+						<td>
+							@if ($order->status->first()->id == 1)
+								<span class="text-danger">{{ $order->status->first()->name }}</span>
+							@else 
+								{{ $order->status->first()->name }}
+							@endif
+						</td>
 						<td><strong>{{ link_to_route('admin.orders.show', $order->rma_number, $order->id, ['class' => 'rma-link', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => trans('admin.message.order_show')]) }}</strong></td>
 						<td>{{ $order->item }}</td>
 						<td>{{ $order->client }}</td>
