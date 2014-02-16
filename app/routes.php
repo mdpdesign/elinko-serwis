@@ -11,6 +11,10 @@
 |
 */
 
+Event::listen('illuminate.query', function($query) {
+	var_dump($query);
+});
+
 // Pokaz ekran logowania dla uzytkownika
 Route::get('login', array( 'as' => 'login', 'uses' => 'HomeController@getLogin'));
 

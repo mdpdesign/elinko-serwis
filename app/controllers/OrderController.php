@@ -56,7 +56,7 @@ class OrderController extends BaseController {
 				// jesli filtrujemy wyniki
 				if (Input::has('status') or Input::has('branch') or Input::has('order'))
 				{
-					$orders =  $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->paginate(Input::get('perpage', 20));
+					$orders =  $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
 
 					return View::make('orders.index')->withUser($user)
 					->withOrders($orders)
@@ -65,7 +65,7 @@ class OrderController extends BaseController {
 					->withInput(Input::except('search'));
 				}
 				// nie wyszukujemy, nie filtrujemy, pokaz wszystkie zlecenia
-				$orders = $this->orders->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
+				$orders = $this->orders->with('status')->with('branch')->with('user')->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
 
 				return View::make('orders.index')->withUser($user)
 				->withOrders($orders)
@@ -151,14 +151,13 @@ class OrderController extends BaseController {
 	 */
 	public function edit($id) {
 		
-		$order = Order::with('status')->with('branch')->findOrFail($id);
+		$order = $this->orders->with('status')->with('branch')->with('user')->with('history')->findOrFail($id);
 		$user = Auth::user();
-		$prevUser = User::find($order->user_id);
 
 		$branch = Branch::orderBy('id')->lists('name', 'id');
 		$status = Status::orderBy('id')->lists('name', 'id');
 
-		return View::make('orders.edit')->withOrder($order)->withUser($user)->withPrevUser($prevUser)->withStatuses($status)->withBranches($branch);
+		return View::make('orders.edit')->withOrder($order)->withUser($user)->withStatuses($status)->withBranches($branch);
 	}
 
 	/**
@@ -170,7 +169,7 @@ class OrderController extends BaseController {
 	public function update($id) {
 		
 		$user = Auth::user();
-		$order = Order::findOrFail($id);
+		$order = $this->orders->findOrFail($id);
 		$order->fill(Input::all());
 		$order->setRawAttributes($order->prepareForInsert(Input::only(['item', 'client', 'pa_fv', 'ext_service'])));
 
@@ -220,7 +219,7 @@ class OrderController extends BaseController {
 	 * @return Response
 	 */
 	public function printOrder($id) {
-		$order = Order::with('status')->with('branch')->with('history')->find($id);
+		$order = $this->orders->with('status')->with('branch')->with('history')->find($id);
 
 		$user = Auth::user();
 		$usersList = User::all()->lists('full_name', 'id');
@@ -243,11 +242,11 @@ class OrderController extends BaseController {
 	 * @return Response
 	 */
 	public function printOrderLabel($id) {
-		$order = Order::with('status')->with('branch')->with('history')->find($id);
+		$order = $this->orders->with('status')->with('branch')->with('history')->find($id);
 
 		$user = Auth::user();
-		$usersList = User::all()->lists('full_name', 'id');
 
+		$usersList = User::all()->lists('full_name', 'id');
 		$branch = Branch::orderBy('id')->lists('name', 'id');
 		$status = Status::orderBy('id')->lists('name', 'id');
 
