@@ -133,7 +133,8 @@
 		<div class="input-row">
 			{{ link_to_route('admin.orders.edit', trans('admin.message.buttons.edit'), $order->id, array('class' => 'btn btn-primary')) }}
 			{{ HTML::link('#', trans('admin.message.buttons.delete'), ['class' => 'btn btn-primary btn-danger', 'data-toggle' => 'modal', 'data-target' => '#myModal']) }}
-            {{ link_to_route('admin.orders.index', trans('admin.message.buttons.back_to_list'), Input::except('search'), ['class' => 'btn btn-primary']) }}
+			{{-- link_to(URL::previous(), trans('admin.message.buttons.back_to_list'), ['class' => 'btn btn-primary']) --}}
+            {{ link_to_route('admin.orders.index', trans('admin.message.buttons.back_to_list'), null, ['class' => 'btn btn-primary']) }}
             <a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary"><span class="glyphicon glyphicon-print"></span></a>
             <a href="{{ URL::route('admin.orders.printlabel', $order->id) }}" target="_blank" class="btn-print-label btn btn-primary"><span class="glyphicon glyphicon-barcode"></span></a>
 		</div>

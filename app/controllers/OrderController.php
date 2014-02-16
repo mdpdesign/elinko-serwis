@@ -18,7 +18,7 @@ class OrderController extends BaseController {
 		$user = Auth::user();
 		
 		// jesli kolekcja jest pusta pokaz informacje ze nie ma co pokazac
-		if (Order::all()->isEmpty())
+		if ($this->orders->all()->isEmpty())
 		{
 			return View::make('orders.empty')->withUser($user);
 		}
@@ -56,13 +56,13 @@ class OrderController extends BaseController {
 				// jesli filtrujemy wyniki
 				if (Input::has('status') or Input::has('branch') or Input::has('order'))
 				{
-					$orders =  $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
+					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
 
 					return View::make('orders.index')->withUser($user)
 					->withOrders($orders)
 					->withStatuses($status)
 					->withBranches($branch)
-					->withInput(Input::except('search'));
+					->withInput(Input::only('status', 'branch', 'order', 'perpage'));
 				}
 				// nie wyszukujemy, nie filtrujemy, pokaz wszystkie zlecenia
 				$orders = $this->orders->with('status')->with('branch')->with('user')->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
@@ -71,7 +71,7 @@ class OrderController extends BaseController {
 				->withOrders($orders)
 				->withStatuses($status)
 				->withBranches($branch)
-				->withInput(Input::except('search'));
+				->withInput(Input::old());
 			}
 		}
 		
