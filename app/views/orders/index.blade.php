@@ -27,7 +27,7 @@
 			</span>
 			<span class="input-inline">
 				{{ Form::label('order', 'Kolejność') }}
-				{{ Form::select('order', ['DESC' => 'Od najnowszych', 'ASC' => 'Od najstarszych'], Input::get('order'), ['class' => 'form-control input-sm']) }}
+				{{ Form::select('order', ['' => 'Wybierz', 'DESC' => 'Od najnowszych', 'ASC' => 'Od najstarszych'], Input::get('order', ''), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
 				{{ Form::label('perpage', 'Wyników na stronie') }}
