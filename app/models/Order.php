@@ -1,26 +1,43 @@
 <?php
 
 class Order extends BaseModel {
-	
+
 	protected $guarded = array('id');
 
 	protected static $rules = array(
-		'status_id' => 'required',
-		'user_id' => 'integer',
-		'item' => 'required',
+		'status_id'     => 'required',
+		'user_id'       => 'integer',
+		'item'          => 'required',
 		'serial_number' => '',
-		'pa_fv' => '',
-		'client' => 'required',
-		'client_phone' => ['regex:#([\d]{3}-[\d]{3}-[\d]{3}|[\d]{2}-[\d]{3}-[\d]{2}-[\d]{2})#'],
-		'price_netto' => 'numeric|between:0,99999',
-		'description' => 'required',
-		'comments' => '',
-		'accesories' => '',
-		'branch_id' => 'required'
-		);
+		'pa_fv'         => '',
+		'client'        => 'required',
+		'client_phone'  => ['regex:#([\d]{3}-[\d]{3}-[\d]{3}|[\d]{2}-[\d]{3}-[\d]{2}-[\d]{2})#'],
+		'price_netto'   => 'numeric|between:0,99999',
+		'description'   => 'required',
+		'comments'      => '',
+		'accesories'    => '',
+		'branch_id'     => 'required'
+	);
+
+	protected static $named_fields = array(
+		'status_id'     => 'Status',
+		'user_id'       => 'ID Użytkownika',
+		'item'          => 'Sprzęt',
+		'serial_number' => 'Numer seryjny',
+		'pa_fv'         => 'Dokument',
+		'client'        => 'Klient',
+		'client_phone'  => 'Telefon',
+		'ext_service'   => 'Serwis zew.',
+		'price_netto'   => 'Cena netto',
+		'diagnose'      => 'Diagnoza',
+		'description'   => 'Opis',
+		'comments'      => 'Komantarz',
+		'accesories'    => 'Akcesoria',
+		'branch_id'     => 'Oddział'
+	);
 
 	public $fields = array();
-	
+
 	 /**
 	 * Event deleted, wykonuje czynnosci kiedy Order jest usuniety
 	 * @param  string $value
@@ -67,7 +84,7 @@ class Order extends BaseModel {
 	{
 		$this->attributes['price_netto'] =  str_replace(',', '.', $value);
 	}
-	
+
 	public function calculateBrutto()
 	{
 		return str_replace('.', ',', money_format("%!.2i", $this->attributes['price_netto'] * 1.23));
@@ -85,7 +102,7 @@ class Order extends BaseModel {
 
 	/**
 	 * Zamienia odpowiednie pola na duze litery
-	 * @param  Array 
+	 * @param  Array
 	 * @return Array
 	 */
 	public function prepareForInsert($input = null) {
@@ -149,7 +166,7 @@ class Order extends BaseModel {
 			return $this->with('status')->with('branch')->orderBy('id', $order)
 						->where('status_id', '=', $status);
 		}
-		else if (!$status && $branch) 
+		else if (!$status && $branch)
 		{
 			return $this->with('status')->with('branch')->orderBy('id', $order)
 						->where('branch_id', '=', $branch);
@@ -161,9 +178,23 @@ class Order extends BaseModel {
 	}
 
 	/**
+	 * Zwraca liste pol zmienionych podczas edycji itp. jako String przydatne
+	 * do budowania historii
+	 *
+	 * @param array $before		Tablica pol przed zmiana
+	 * @param array $after		Tablica pol po zmianie
+	 * @return String
+	 */
+	public function getModifiedAttributes(array $before, array $after) {
+		$keys = array_keys(array_diff($after, $before));
+		$combined = array_combine($keys, $keys);
+		return $result = implode(', ', array_values(array_intersect_key(self::$named_fields, $combined)));
+	}
+
+	/**
 	 * Relacje z innymi Modelami
 	 */
-	
+
 	/**
 	 * Relacja z modelem User
 	 * @return Relation
@@ -178,7 +209,7 @@ class Order extends BaseModel {
 	{
 		return $this->belongsToMany('Status');
 	}
-	
+
 	// Orders __belongs_to_many__ Branches
 	public function branch()
 	{

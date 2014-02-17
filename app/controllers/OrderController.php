@@ -117,7 +117,6 @@ class OrderController extends BaseController {
 
 			return Redirect::route('admin.orders.index')->withSuccess(trans('admin.message.order_added'));
 		}
-
 		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->errors);
 	}
 	/**
@@ -170,13 +169,17 @@ class OrderController extends BaseController {
 		
 		$user = Auth::user();
 		$order = $this->orders->findOrFail($id);
+		
+		$before = $order->attributesToArray();
 		$order->fill(Input::all());
 		$order->setRawAttributes($order->prepareForInsert(Input::only(['item', 'client', 'pa_fv', 'ext_service'])));
+		$after = $order->attributesToArray();
 
 		//jesli poprawnie zapisano zlecenie do bazy
 		if ($order->save()) {
-			$order->status()->sync([Input::get('status_id')]);
-			$order->history()->create(['event' => trans('admin.message.order_modified_by') . $user->full_name]);
+			$order->status()->sync([Input::get('status_id')]);		
+			$order->history()->create(['event' => trans('admin.message.order_modified_by') . $user->full_name . ' zmiana: ' . $order->getModifiedAttributes($before, $after)]);
+			
 			return Redirect::route('admin.orders.show', $id)->withSuccess(trans('admin.message.order_updated'));
 		}
 		// jesli nie zapisano powroc do edycji z informacjami o bledach
@@ -191,9 +194,9 @@ class OrderController extends BaseController {
 	 */
 	public function destroy($id) {
 		// pobierz kolekcje z bazy
-		$order = Order::findOrFail($id);
+		$order = $this->orders->findOrFail($id);
 
-		// jesli jistnieje kolekcja
+		// jesli jistnieje kolekcja, usun wszystkie powiazania i samo Zlecenie
 		if ($order)
 		{
 			$order->status()->detach();
@@ -203,11 +206,12 @@ class OrderController extends BaseController {
 			
 			return Redirect::route('admin.orders.index')->withSuccess( trans('admin.message.order_delete_success') );
 		}
+		// nie odnaleziono Zlecenia do usuniacia, blad aplikacji, skontaktuj sie z Administratorem
 		else
 		{
-			return 'Nie można odnależć modelu!!!';
+			return Redirect::route('admin.order.index')->withErrors( trans('admin.message.contact_administrator') );
 		}
-		
+		// Jesli cos ogolnie poszlo nie tak
 		return Redirect::route('admin.order.index')->withErrors( trans('admin.message.contact_administrator') );
 	}
 
@@ -260,29 +264,42 @@ class OrderController extends BaseController {
 	}
 
 
+	/**
+	 * Masowa aktualizacja stattusow zamowien, dodaje wpis do historii Zlecenia
+	 * 
+	 * @return Response
+	 */
 	public function massEdit()
 	{
+		// jezeli wybrano z pola select nowy status
 		if (Input::has('mass_status'))
 		{
+			// jesli wybrano Zlecenia do zmiany
 			if (Input::has('orderid'))
 			{
+				$user = Auth::user();
+				$statuses = Status::all();
+				$orders = $this->orders->with('status')->findMany(Input::get('orderid'));
 				$newStatus = Input::get('mass_status');
 				
-				foreach (Input::get('orderid') as $order)
+				// dla kazdego zlecenia: dodaj historie, zaktualizuj status
+				foreach ($orders as $order)
 				{
-					$currentOrder = $this->orders->findOrFail($order);
-					$currentOrder->status_id = $newStatus;
-					$currentOrder->save();
-					$currentOrder->status()->sync([$newStatus]);
+					$order->history()->create(['event' => 'Masowa edycja przez: ' . $user->full_name . ' poprzedni status: ' . $order->status->first()->name . ' nowy status: ' . $statuses->find($newStatus)->name ]);
+					$order->status_id = $newStatus;
+					$order->save();
+					$order->status()->sync([$newStatus]);
 				}
-
-				return Redirect::back()->withSuccess('Zaktualizowano poprawnie!');
+				// poprawnie zaktualizowano wszystkie zaznaczone Zlecenia
+				return Redirect::back()->withSuccess('Zaktualizowano poprawnie!');				
 			}
-			else 
+			// nie zaznaczono zadnych Zlecen do zmiany
+			else
 			{
 				return Redirect::back()->withInput()->withErrors('Nie zaznaczono zleceń do zmiany!');
 			}
 		}
+		// nie wybrano statusu z pola select
 		else 
 		{
 			return Redirect::back()->withInput()->withErrors('Należy wybrać nowy status!');
