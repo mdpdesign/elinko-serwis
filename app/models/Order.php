@@ -31,7 +31,7 @@ class Order extends BaseModel {
 		'price_netto'   => 'Cena netto',
 		'diagnose'      => 'Diagnoza',
 		'description'   => 'Opis',
-		'comments'      => 'Komantarz',
+		'comments'      => 'Uwagi',
 		'accesories'    => 'Akcesoria',
 		'branch_id'     => 'Oddział'
 	);
