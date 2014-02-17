@@ -31,6 +31,11 @@ body {
 	margin-bottom: 1em;
 }
 
+.warning {
+	border-color: #ebccd1;
+	background-color: #f2dede;
+}
+
 .input-inline {
 	margin-right: 1em;
 	display: inline-block;

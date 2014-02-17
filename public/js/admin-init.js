@@ -6,6 +6,10 @@ $( '.btn-details' ).click(function() {
 	$(this).parents('tr').toggleClass('info');
 });
 
+$( ".warning" ).focus(function() {
+    $(this).removeClass('warning');
+});
+
 $( '.btn-delete-order' ).click(function() {
     var value = $(this).attr('data-order-id');
     var $deleteForm = $('#form-delete-confirm');

@@ -31,12 +31,12 @@
 
 		<div class="input-row">
 			{{ Form::label('item', trans('admin.message.order_item')) }}
-			{{ Form::text('item', null, ['class' => 'form-control', 'placeholder' => trans('admin.message.placeholders.order_item_pl')]) }}
+			{{ Form::text('item', null, ['class' => ($errors->has('item')) ? 'form-control warning' : 'form-control', 'placeholder' => trans('admin.message.placeholders.order_item_pl')]) }}
 		</div>
 
 		<div class="input-row">
 			{{ Form::label('description', trans('admin.message.order_description')) }}
-			{{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => trans('admin.message.placeholders.order_description_pl')]) }}
+			{{ Form::textarea('description', null, ['class' => ($errors->has('description')) ? 'form-control warning' : 'form-control', 'rows' => 5, 'placeholder' => trans('admin.message.placeholders.order_description_pl')]) }}
 		</div>
 
 		<div class="row">
@@ -59,7 +59,7 @@
 			<div class="col-md-6">
 				<div class="input-row">
 					{{ Form::label('client', trans('admin.message.order_client')) }}
-					{{ Form::text('client', null, ['class' => 'form-control', 'placeholder' => trans('admin.message.placeholders.order_client_pl')]) }}
+					{{ Form::text('client', null, ['class' => ($errors->has('client')) ? 'form-control warning' : 'form-control', 'placeholder' => trans('admin.message.placeholders.order_client_pl')]) }}
 				</div>
 			</div>
 			
