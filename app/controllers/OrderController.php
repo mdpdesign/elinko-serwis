@@ -57,21 +57,25 @@ class OrderController extends BaseController {
 				if (Input::has('status') or Input::has('branch') or Input::has('order'))
 				{
 					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
-
+					
+					// zapamietujemy filtrowanie do nastepnego request'u
+					Input::flashOnly('status', 'branch', 'order', 'perpage');
+					
 					return View::make('orders.index')->withUser($user)
 					->withOrders($orders)
 					->withStatuses($status)
-					->withBranches($branch)
-					->withInput(Input::only('status', 'branch', 'order', 'perpage'));
+					->withBranches($branch);
 				}
 				// nie wyszukujemy, nie filtrujemy, pokaz wszystkie zlecenia
 				$orders = $this->orders->with('status')->with('branch')->with('user')->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
-
+				
+				// pokaz cala liste, resetowanie ew. sortowania itp
+				Input::flush();
+				
 				return View::make('orders.index')->withUser($user)
 				->withOrders($orders)
 				->withStatuses($status)
-				->withBranches($branch)
-				->withInput(Input::old());
+				->withBranches($branch);
 			}
 		}
 		

@@ -54,6 +54,11 @@ Route::post('pull', function() {
 	return 'Nie pobrano..';
 });
 
+Route::get('/test/{id}/{pages}', ['as' => 'test.show', function($id, $pages) {
+	return var_dump(Input::all()) . var_dump('To jest test parametrów ' . $id . ' pages: ' . $pages);
+}]);
+
 Route::get('test', function() {
+	return Redirect::route('test.show', Input::all());
 	return View::make('phpinfo');
 });
