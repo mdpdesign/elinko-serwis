@@ -79,7 +79,10 @@
 								{{ $order->status->first()->name }}
 							@endif
 						</td>
-						<td><strong>{{ link_to_route('admin.orders.show', $order->rma_number, $order->id, ['class' => 'rma-link', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => trans('admin.message.order_show')]) }}</strong></td>
+						<td>
+							<strong>{{ link_to_route('admin.orders.show', $order->rma_number, $order->id, ['class' => 'rma-link', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => trans('admin.message.order_show')]) }}</strong>
+							<span>{{ $order->created_at }}</span>
+						</td>
 						<td>{{ $order->item }}</td>
 						<td>{{ $order->client }}</td>
 						<td>{{ $order->client_phone }}</td>
