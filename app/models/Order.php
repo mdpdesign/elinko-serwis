@@ -47,7 +47,7 @@ class Order extends BaseModel {
 	 {
 	 	parent::boot();
 
-			// Setup event bindings...
+		// Setup event bindings...
 	 	Order::deleted( function($order)
 	 	{
 	 		DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();
@@ -150,10 +150,12 @@ class Order extends BaseModel {
 	 * @param  string $order 	Kolejnosc sortowania Id zlecenia
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getFilteredResults($status = '', $branch = '', $order = 'ASC')
+	public function getFilteredResults($status = '', $branch = '', $order = 'DESC')
 	{
 
-		if (is_null($order)) $order = 'ASC';
+		if ($order == '') $order = 'DESC';
+
+		//var_dump($order);
 
 		if ($status && $branch)
 		{
@@ -168,7 +170,8 @@ class Order extends BaseModel {
 		}
 		else if (!$status && $branch)
 		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
+			return $this->with('status')->with('branch')->orderBy('status_id', 'ASC')
+						->orderBy('id', $order)
 						->where('branch_id', '=', $branch);
 		}
 		else
