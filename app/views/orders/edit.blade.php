@@ -7,7 +7,7 @@
 	<div class="col-md-12">
 		<div class="page-header">
 			<h3>{{ trans('admin.message.order_show_title') }} <strong>{{ $order->rma_number }}</strong></h3>
-			<h4>{{ $order->history->last()->created_at . ' ' . $order->history->last()->event }}</h4>
+			<h4>{{ $order->history->first()->created_at . ' ' . $order->history->first()->event }}</h4>
 		</div>
 	</div>
 
