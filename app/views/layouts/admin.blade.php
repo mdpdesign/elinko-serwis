@@ -14,6 +14,9 @@
 	<!-- Bootstrap core CSS -->
 	{{ HTML::style('css/bootstrap.css') }}
 
+	<!-- Fonts CSS -->
+	{{ HTML::style('css/font-elinko.css') }}
+
 	<!-- Admin CSS -->
 	{{ HTML::style('css/admin.css') }}
 
@@ -30,7 +33,7 @@
 		<body>
 
 			<!-- Fixed navbar -->
-			<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 				<div class="container">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,7 +42,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						{{ link_to_route('admin', trans('admin.message.appname'), null, array('class' => 'navbar-brand')) }}
+						<a href="{{ route('admin') }}" class="navbar-brand"><span class="icon icon-elinko"></span></a>
 					</div>
 					<div class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">
@@ -60,17 +63,20 @@
 						
 						{{ Form::open(['route' => 'admin.orders.index', 'method' => 'GET', 'class' => 'navbar-form navbar-left', 'role' => 'search']) }}
 							<div class="form-group">
-								{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Szukaj']) }}
+								{{ Form::text('search', null, ['class' => 'navbar-search form-control', 'placeholder' => 'Szukaj']) }}
 							</div>
-							{{ Form::button('Szukaj', ['type' => 'submit', 'class' => 'btn btn-default']) }}
+							{{ Form::button('Szukaj', ['type' => 'submit', 'class' => 'btn btn-primary']) }}
 						{{ Form::close() }}
 
 						<ul class="nav navbar-nav navbar-right">
-							<li class=""><a href="{{ URL::to('logout') }}"><span class="glyphicon glyphicon-off"></span> Wyloguj</a></li>
+							<li><a href="{{ route('admin.users.index') }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.message.edit_user') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ $user->firstname .' '. $user->lastname }}</a>
+							<li><a href="{{ URL::to('logout') }}"><span class="glyphicon glyphicon-off"></span> Wyloguj</a></li>	
 						</ul>
-						<p class="navbar-text navbar-right"><strong>{{ trans('admin.message.logged_as') }}</strong><span class="glyphicon glyphicon-user"></span>&nbsp;{{ link_to_route('admin.users.index', $user->firstname .' '. $user->lastname, null, array('class' => 'admin-tooltip', 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'title' => trans('admin.message.edit_user'))) }}</p>
 					</div><!--/.nav-collapse -->
 				</div>
+				<div class="navborder bar-1"></div>
+				<div class="navborder bar-2"></div>
+				<div class="navborder bar-3"></div>
 			</div>
 
 			<div class="container">
