@@ -70,7 +70,7 @@ class Order extends BaseModel {
 	*/
 	public function get_short_description()
 	{
-		return ( strlen($this->description) > 90 ) ? substr($this->description, 0, 90) . ' (...)' : $this->description;
+		return ( strlen($this->description) > 90 ) ? substr($this->description, 0, strrpos(substr($this->description, 0, 90), ' ')) . ' (...)' : $this->description;
 	}
 
 
