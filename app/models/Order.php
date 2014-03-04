@@ -38,31 +38,40 @@ class Order extends BaseModel {
 
 	public $fields = array();
 
-	 /**
-	 * Event deleted, wykonuje czynnosci kiedy Order jest usuniety
-	 * @param  string $value
-	 * @return void
-	 */
-	 public static function boot()
-	 {
-	 	parent::boot();
+	/**
+	* Event deleted, wykonuje czynnosci kiedy Order jest usuniety
+	* @param  string $value
+	* @return void
+	*/
+	public static function boot()
+	{
+		parent::boot();
 
-		// Setup event bindings...
-	 	Order::deleted( function($order)
-	 	{
-	 		DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();
-	 	});
-	 }
+	// Setup event bindings...
+		Order::deleted( function($order)
+		{
+			DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();
+		});
+	}
 
-	 /**
-	  * Zwraca odpowiedni format daty i czasu
-	  * @return DateTime
-	  */
-	 public function get_short_updated_at()
-	 {
-	 	$date = $this->updated_at;
-	 	if ($date) return $date->format('H:i:s d-m-Y');
-	 }
+	/**
+	* Zwraca odpowiedni format daty i czasu
+	* @return DateTime
+	*/
+	public function get_short_updated_at()
+	{
+		$date = $this->updated_at;
+		if ($date) return $date->format('H:i:s d-m-Y');
+	}
+
+	/**
+	* Zwraca krotszy opis zleceniea (do wydruku etykiety serwisowej)
+	* @return DateTime
+	*/
+	public function get_short_description()
+	{
+		return ( strlen($this->description) > 90 ) ? substr($this->description, 0, 90) . ' (...)' : $this->description;
+	}
 
 
 	/**
