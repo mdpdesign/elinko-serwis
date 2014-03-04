@@ -155,8 +155,6 @@ class Order extends BaseModel {
 
 		if ($order == '') $order = 'DESC';
 
-		//var_dump($order);
-
 		if ($status && $branch)
 		{
 			return $this->with('status')->with('branch')->orderBy('id', $order)
@@ -176,7 +174,7 @@ class Order extends BaseModel {
 		}
 		else
 		{
-			return $this->with('status')->with('branch')->orderBy('id', $order);
+			return $this->with('status')->with('branch')->orderBy('status_id', 'ASC')->orderBy('id', $order);
 		}
 	}
 
