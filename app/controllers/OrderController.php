@@ -262,7 +262,7 @@ class OrderController extends BaseController {
 		// https://github.com/dompdf/dompdf/blob/master/include/cpdf_adapter.cls.php
 		// http://www.unitconversion.org/typography/centimeters-to-points-computer-conversion.html
 		// etykietka 60mm x 50mm
-		$pdf = PDF::loadView('orders.printorderlabel', ['order' => $order])->setPaper(array(0,0, 141.73, 141.73 ));
+		$pdf = PDF::loadView('orders.printorderlabel', ['order' => $order])->setPaper(array(0, 0, 141.73, 170.07 ));
 		return $pdf->stream('label_' . $order->rma_number);
 
 	}

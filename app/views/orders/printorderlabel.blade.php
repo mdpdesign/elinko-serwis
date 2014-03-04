@@ -15,6 +15,10 @@
 				<p><strong>Data:</strong> {{ $order->created_at }}</p>
 				<p><strong>Klient:</strong> {{ $order->client }}</p>
 				<p><strong>Telefon:</strong> {{ $order->client_phone }}</p>
+				<p><strong>Urządzenie:</strong></p>
+				<p>{{ $order->item }}</p>
+				<p><strong>Opis zlecenia:</strong></p>
+				<p>{{ $order->description }}</p>
 			</div>
 		</td>
 	</tr>
