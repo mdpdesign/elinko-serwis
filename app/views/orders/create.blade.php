@@ -75,7 +75,7 @@
 			<div class="col-md-12">
 				<div class="input-row">
 					{{ Form::label('user_id', trans('admin.message.order_creator')) }}
-					{{ Form::select('user_id', $users_list, null, ['class' => 'form-control']) }}
+					{{ Form::select('user_id', $users_list, $user->id, ['class' => 'form-control']) }}
 				</div>
 			</div>
 		</div>

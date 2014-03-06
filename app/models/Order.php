@@ -137,10 +137,11 @@ class Order extends BaseModel {
 	 */
 	public function getSearchQuery($term = '', $order = 'DESC', $status = '', $branch = '')
 	{
-		return $this->orderBy('id', $order)->where('rma_number', 'LIKE', '%'. $term. '%')
+		return $this->where('rma_number', 'LIKE', '%'. $term. '%')
 					->orWhere('item', 'LIKE', '%'. $term. '%')
 					->orWhere('serial_number', 'LIKE', '%'. $term. '%')
 					->orWhere('pa_fv', 'LIKE', '%'. $term. '%')
+					->orWhere('ext_service', 'LIKE', '%'. $term. '%')
 					->orWhere('client', 'LIKE', '%'. $term. '%')
 					->orWhere('client_phone', 'LIKE', '%'. $term. '%')
 					->orWhere('description', 'LIKE', '%'. $term. '%')
@@ -148,7 +149,8 @@ class Order extends BaseModel {
 					->orWhere('comments', 'LIKE', '%'. $term. '%')
 					->orWhere('accesories', 'LIKE', '%'. $term. '%')
 					->where('status_id', '=', $status)
-					->where('branch_id', '=', $branch);
+					->where('branch_id', '=', $branch)
+					->orderBy('id', $order);
 	}
 
 
@@ -159,32 +161,16 @@ class Order extends BaseModel {
 	 * @param  string $order 	Kolejnosc sortowania Id zlecenia
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getFilteredResults($status = '', $branch = '', $order = 'DESC')
+	public function getFilteredResults($status = null, $branch = null, $user = null, $order = 'DESC')
 	{
+		if (empty($order)) $order = 'DESC';
 
-		if ($order == '') $order = 'DESC';
-
-		if ($status && $branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
-						->where('status_id', '=', $status)
-						->where('branch_id', '=', $branch);
-		}
-		else if ($status && !$branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
-						->where('status_id', '=', $status);
-		}
-		else if (!$status && $branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('status_id', 'ASC')
-						->orderBy('id', $order)
-						->where('branch_id', '=', $branch);
-		}
-		else
-		{
-			return $this->with('status')->with('branch')->orderBy('status_id', 'ASC')->orderBy('id', $order);
-		}
+		return $this->with('status')->with('branch')
+			->where(function($query) use ($status, $branch, $user) {
+				if (!empty($status)) $query->where('status_id', '=', $status);
+				if (!empty($branch)) $query->where('branch_id', '=', $branch);
+				if (!empty($user)) $query->where('user_id', '=', $user);
+			})->orderBy('status_id', 'ASC')->orderBy('id', $order);
 	}
 
 	/**

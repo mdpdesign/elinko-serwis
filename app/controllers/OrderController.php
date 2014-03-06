@@ -26,9 +26,11 @@ class OrderController extends BaseController {
 		else
 		{
 
-			// listy statusow i oddzialow
+			// listy statusow, oddzialow, uzytkownikow
 			$branch = Branch::orderBy('id')->lists('name', 'id');
 			$status = Status::orderBy('id')->lists('name', 'id');
+			$usersList = User::all()->lists('full_name', 'id');
+			asort($usersList);
 
 			// jelsi istnieje zmienna search, wtedy wyszukujemy, pokaz tylko 
 			// kolekce spelniajaca kryteria wyszukiwania
@@ -43,10 +45,12 @@ class OrderController extends BaseController {
 					// pokaz informacje ze nie ma wynikow wyszukiwania dla podanych kryteriow
 					return View::make('orders.empty')->withUser($user)->withErrors('Nie odnaleziono zleceń spełniających kryterium wyszukiwania');
 				}
+
 				// pokaz wyniki wyszukiwania
 				return View::make('orders.index')->withUser($user)->withOrders($orders)
 					->withStatuses($status)
 					->withBranches($branch)
+					->withUsers($usersList)
 					->withSearch($term);
 			}
 			// jesli nie wyszukujemy
@@ -54,14 +58,27 @@ class OrderController extends BaseController {
 			{
 
 				// jesli filtrujemy wyniki
-				if (Input::has('status') or Input::has('branch') or Input::has('order'))
+				if (Input::has('status') or Input::has('branch') or Input::has('owner') or Input::has('order'))
 				{
-					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
+					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch', null), Input::get('owner', null), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
 					
 					// zapamietujemy filtrowanie do nastepnego request'u
 					Input::flashOnly('status', 'branch', 'order', 'perpage');
+
+					// jesli po filtrowaniu kolekcja jest pusta pokaz informacje
+					if ($orders->isEmpty())
+					{
+						return View::make('orders.index')->withUser($user)
+						->withUsers($usersList)
+						->withOrders($orders)
+						->withStatuses($status)
+						->withBranches($branch)
+						->withErrors('Zlecenia nie spełniają kryteriów filtrowania. Popraw filtry.');
+					}
 					
+					// pokaz wyniki filtrowania
 					return View::make('orders.index')->withUser($user)
+					->withUsers($usersList)
 					->withOrders($orders)
 					->withStatuses($status)
 					->withBranches($branch);
@@ -73,6 +90,7 @@ class OrderController extends BaseController {
 				Input::flush();
 				
 				return View::make('orders.index')->withUser($user)
+				->withUsers($usersList)
 				->withOrders($orders)
 				->withStatuses($status)
 				->withBranches($branch);
@@ -119,7 +137,7 @@ class OrderController extends BaseController {
 			$order->branch()->attach(Input::get('branch_id'));
 			$order->history()->create(['event' => trans('admin.message.order_created_by') . User::find(Input::get('user_id'))->full_name ]);
 
-			return Redirect::route('admin.orders.index')->withSuccess(trans('admin.message.order_added'));
+			return Redirect::route('admin.orders.show', $order->id)->withSuccess(trans('admin.message.order_added'));
 		}
 		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->errors);
 	}
@@ -238,8 +256,8 @@ class OrderController extends BaseController {
 		$pdf = PDF::loadView('orders.printorder', ['order' => $order]);
 		return $pdf->stream($order->rma_number);
 
-		//return View::make('orders.printorder')
-		//->withOrder($order);
+		// return View::make('orders.printorder')
+		// ->withOrder($order);
 	}
 
 

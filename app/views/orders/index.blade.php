@@ -2,6 +2,21 @@
 
 @section('content')
 
+<div class="errors row">
+	<div class="col-md-12">
+	
+		@if ($errors->any())
+		<div class="alert alert-danger fade in">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+			@foreach($errors->all() as $error)
+			<p>{{ $error }}</p>
+			@endforeach
+		</div>
+		@endif
+		
+	</div>
+</div>
+
 <div id="orders-header" class="row">
 	<div class="col-md-12">
 		<div class="page-header">
@@ -24,6 +39,10 @@
 			<span class="input-inline">
 				{{ Form::label('branch', 'Oddział') }}
 				{{ Form::select('branch', (['' => 'Wszystkie'] + $branches), Input::get('branch', ''), ['class' => 'form-control input-sm']) }}
+			</span>
+			<span class="input-inline">
+				{{ Form::label('owner', 'Przyjmujący') }}
+				{{ Form::select('owner', (['' => 'Wszyscy'] + $users), Input::get('owner', ''), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
 				{{ Form::label('order', 'Kolejność') }}
