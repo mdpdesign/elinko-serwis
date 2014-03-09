@@ -147,6 +147,11 @@ th.netto, th.brutto {
 	width: 7%;
 }
 
+/* Wykresy */
+.chartContainer {
+	padding: 20px 0;
+}
+
 /* paginacja */
 .pagination-wrapper {
 	text-align: center;

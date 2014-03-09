@@ -57,6 +57,9 @@
 									<li class="dropdown-header">Pokaż zlecenia:</li>
 									<li><a class="open-all" href="#">Rozwiń wszystkie</a></li>
 									<li><a class="close-all" href="#">Zwiń wszystkie</a></li>
+									<li class="divider"></li>
+									<li class="dropdown-header">Wykresy:</li>
+									<li><a href="{{ route('admin.orders.reports') }}">Ilość wg. dni</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -85,7 +88,7 @@
 				@yield('content')
 
 				<div class="row credits">
-					<div class="-col-md-12">
+					<div class="col-md-12">
 						Projekt i wykonanie <a href="http://www.mdpdesign.pl">mdpdesign.pl</a> &copy; {{ date('Y') }}
 					</div>
 				</div>
@@ -96,6 +99,9 @@
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+		@yield('footer-scripts')
+
 		{{ HTML::script('js/bootstrap.min.js') }}
 		{{ HTML::script('js/admin-init.js') }}
 	</body>

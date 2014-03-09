@@ -15,6 +15,7 @@
 // 	var_dump($query);
 // });
 
+
 // Pokaz ekran logowania dla uzytkownika
 Route::get('login', array( 'as' => 'login', 'uses' => 'HomeController@getLogin'));
 
@@ -32,6 +33,12 @@ Route::get('/', array( 'as' => 'home', 'uses' => 'HomeController@getHome'));
 
 // Routing do edycji uzytkownika
 Route::resource('/admin/users', 'UserController');
+
+
+// Routing dla wykresow
+Route::get('/admin/orders/reports', [ 'as' => 'admin.orders.reports', 'before' => 'auth', 'uses' => 'ReportsController@index']);
+
+
 
 // Routing do zarzadzania zgloszeniami
 Route::resource('/admin/orders', 'OrderController');
@@ -53,10 +60,6 @@ Route::post('pull', function() {
 	Log::info('PULL Event BAD :(');
 	return 'Nie pobrano..';
 });
-
-Route::get('/test/{id}/{pages}', ['as' => 'test.show', function($id, $pages) {
-	return var_dump(Input::all()) . var_dump('To jest test parametrów ' . $id . ' pages: ' . $pages);
-}]);
 
 Route::get('test', function() {
 	return Redirect::route('test.show', Input::all());
