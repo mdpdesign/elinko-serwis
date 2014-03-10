@@ -32,12 +32,12 @@ class OrderController extends BaseController {
 			$usersList = User::all()->lists('full_name', 'id');
 			asort($usersList);
 
-			// jelsi istnieje zmienna search, wtedy wyszukujemy, pokaz tylko 
+			// jesli istnieje zmienna search, wtedy wyszukujemy, pokaz tylko 
 			// kolekce spelniajaca kryteria wyszukiwania
 			if (Input::get('search'))
 			{
 				$term = Input::get('search');
-				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'DESC'), Input::get('status'), Input::get('branch'))->paginate(Input::get('perpage', 20));
+				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'ASC'), Input::get('status'), Input::get('branch'))->paginate(Input::get('perpage', 20));
 				
 				// jesli kolekcja nie spelnia kryteriow wyszukiwania pokaz informacje
 				if ($orders->isEmpty())
