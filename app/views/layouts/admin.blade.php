@@ -20,6 +20,8 @@
 	<!-- Admin CSS -->
 	{{ HTML::style('css/admin.css') }}
 
+	@yield('styles')
+
 	<!-- Just for debugging purposes. Don't actually copy this line! -->
 	<!--[if lt IE 9]>{{ HTML::script('js/ie8-responsive-file-warning.js') }}<![endif]-->
 

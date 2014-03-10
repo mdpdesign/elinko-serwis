@@ -6,6 +6,10 @@ interface OrderRepositoryInterface {
 	public function allDates();
 
 	public function orderPerDay();
+	
+	public function orderPerBranch();
+	
+	public function orderPerStatus();
 }
 
 ?>

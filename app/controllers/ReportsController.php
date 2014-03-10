@@ -20,13 +20,21 @@ class ReportsController extends BaseController {
 	 */
 	public function index()
 	{
+		
+		return $values = $this->order->orderPerStatus();
+		
 		// pokaz wykres ze zleceniami w zaleznosci od daty
 		// ile zlecen w danym dniu, os Y - ilosc zlecen, os X - daty od pierwszego do ostatniego zlecenia z zakresu
 		$values = $this->order->orderPerDay();
 
 		return View::make('reports.index')->withUser($this->user)
 			->withDates($values->lists('date'))
-			->withValues($values->lists('count'));
+			->withValues($values->lists('count'))
+			->withData($values);
+	}
+	
+	public function perStatus() {
+		return $values = $this->order->orderPerStatus();
 	}
 
 }

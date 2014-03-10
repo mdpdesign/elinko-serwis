@@ -26,4 +26,14 @@ class OrderRepository implements OrderRepositoryInterface {
 	{
 		return $this->model->orderBy('id', 'DESC')->take(60)->groupBy(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\')'))->get(array(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\') AS date'), DB::raw('count(*) AS count')))->reverse();
 	}
+	
+	public function orderPerBranch()
+	{
+		return $this->model->orderBy('id', 'DESC')->take(60)->groupBy('branch_id')->get();
+	}
+	
+	public function orderPerStatus() 
+	{
+		return $this->model->orderBy('id', 'DESC')->groupBy('status_id')->get(array(DB::raw('status_id AS status'), DB::raw('count(*) AS count')))->reverse();
+	}
 }
