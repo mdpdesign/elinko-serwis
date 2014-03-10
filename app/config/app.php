@@ -110,6 +110,7 @@ return array(
 		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Barryvdh\DomPDF\ServiceProvider',
 		'Dinesh\Barcode\BarcodeServiceProvider',
+		'Serwis\SerwisServiceProvider',
 	),
 
 	/*
