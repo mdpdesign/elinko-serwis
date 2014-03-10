@@ -135,7 +135,7 @@ class Order extends BaseModel {
 	 * @param  string $order 	Jaka jest kolejnosc
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getSearchQuery($term = '', $order = 'DESC', $status = '', $branch = '')
+	public function getSearchQuery($term = '', $order = 'ASC', $status = '', $branch = '')
 	{
 		return $this->where('rma_number', 'LIKE', '%'. $term. '%')
 					->orWhere('item', 'LIKE', '%'. $term. '%')
@@ -150,7 +150,7 @@ class Order extends BaseModel {
 					->orWhere('accesories', 'LIKE', '%'. $term. '%')
 					->where('status_id', '=', $status)
 					->where('branch_id', '=', $branch)
-					->orderBy('id', $order);
+					->orderBy('status_id', $order);
 	}
 
 
