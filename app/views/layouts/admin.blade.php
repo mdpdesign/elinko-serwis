@@ -60,8 +60,8 @@
 									<li><a class="open-all" href="#">Rozwiń wszystkie</a></li>
 									<li><a class="close-all" href="#">Zwiń wszystkie</a></li>
 									<li class="divider"></li>
-									<li class="dropdown-header">Wykresy:</li>
-									<li><a href="{{ route('admin.orders.reports') }}">Ilość wg. dni</a></li>
+									<li class="dropdown-header">Statystyki:</li>
+									<li><a href="{{ route('admin.orders.reports') }}">Pokaż statystyki</a></li>
 								</ul>
 							</li>
 						</ul>

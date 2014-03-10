@@ -24,16 +24,16 @@ class OrderRepository implements OrderRepositoryInterface {
 
 	public function orderPerDay()
 	{
-		return $this->model->orderBy('id', 'DESC')->take(60)->groupBy(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\')'))->get(array(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\') AS date'), DB::raw('count(*) AS count')))->reverse();
+		return $this->model->orderBy('id', 'DESC')->take(365)->groupBy(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\')'))->get(array(DB::raw('DATE_FORMAT(created_at, \'%Y-%m-%d\') AS date'), DB::raw('count(*) AS count')))->reverse();
 	}
 	
 	public function orderPerBranch()
 	{
-		return $this->model->orderBy('id', 'DESC')->take(60)->groupBy('branch_id')->get();
+		return $this->model->leftJoin('branches', 'orders.branch_id', '=', 'branches.id')->orderBy('branches.id', 'ASC')->groupBy('branch_id')->get(array(DB::raw('name AS branch'), DB::raw('count(*) AS count')));
 	}
 	
 	public function orderPerStatus() 
 	{
-		return $this->model->orderBy('id', 'DESC')->groupBy('status_id')->get(array(DB::raw('status_id AS status'), DB::raw('count(*) AS count')))->reverse();
+		return $this->model->leftJoin('statuses', 'orders.status_id', '=', 'statuses.id')->orderBy('statuses.id', 'ASC')->groupBy('status_id')->get(array(DB::raw('name AS status'), DB::raw('count(*) AS count')));
 	}
 }
