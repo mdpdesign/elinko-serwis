@@ -212,8 +212,8 @@
 
 <!-- Modal -->
 <div id="modal-delete" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	{{ Form::model( $orders, array( 'id' => 'form-delete-confirm', 'method' => 'DELETE', 'route' => array('admin.orders.destroy', 0))) }}
-	{{ Form::hidden('order_to_delete', null, ['id' => 'order-to-delete']) }}
+	{{ Form::model( $orders, array( 'id' => 'form-delete-confirm', 'method' => 'DELETE', 'route' => array('admin.orders.destroy', null))) }}
+	{{ Form::hidden('order_to_delete_action', route('admin.orders.index'), ['id' => 'order-to-delete-action']) }}
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
