@@ -12,7 +12,24 @@ return array(
 
     'message' => array(
         'appname'                     => 'Serwis Elinko',
-        'contact_administrator'       => 'Wystąpił błąd skontaktuj się z administratorem: marek@mdpdesign.pl',
+		'app_settings'					=> 'Ustawienia aplikacji',
+		'switch_nav'					=> 'Przełącz nawigację',
+		'show_orders'					=> 'Pokaż zlecenia:',
+		'show_all'						=> 'Rozwiń wszystkie',
+		'hide_all'						=> 'Zwiń wszystkie',
+		'statistics'					=> 'Statystyki:',
+		'show_statistics'				=> 'Pokaż statystyki',
+		'settings'						=> 'Ustawienia',
+		'logout'						=> 'Wyloguj',
+		'app_credits'					=> 'Projekt i wykonanie <a href="http://www.mdpdesign.pl">mdpdesign.pl</a> &copy; :date',
+		
+		'actual_date'					=> 'Aktualna data',
+		'manage_users'					=> 'Zarządzaj Użytkownikami',
+		'add_new_user'					=> 'Dodaj Użytkownika',
+		
+		'search_results'				=> 'Wyniki wyszukiwania dla słowa: ":search"',
+        
+		'contact_administrator'       => 'Wystąpił błąd skontaktuj się z administratorem: marek@mdpdesign.pl',
         'page_title'                  => 'Serwis Elinko - panel administracyjny',
         'edit_user'                   => 'Edytuj dane użytkownika',
         'logged_as'                   => 'Zalogowany jako: ',
@@ -24,8 +41,13 @@ return array(
         'cannot_edit_other_user'      => 'Nie możesz edytować danych innego Użytkownika! Nie ładnie...',
         'user_data_changed_success'   => 'Dane użytkownika zostały zmienione poprawnie',
         'by_user'                     => 'przez Użytkownika:',
-        'order_show_title'            => 'Zlecenie',
+        
+		'order_show_title'            => 'Zlecenie',
         'order_show_last_edited'      => 'Ostatnia edycja: ',
+		
+		'order_add_new'				=> 'Dodaj nowe zlecenie',
+		'order_fill_all_fields'				=> 'Uzupełnij wszystkie pola',
+		
         'order_show'                  => 'Pokaż szczegóły zlecenia',
         'order_added'                 => 'Nowe zlecenie dodane poprawnie.',
         'order_updated'               => 'Zlecenie zapisane poprawnie',
@@ -58,6 +80,7 @@ return array(
         'order_diagnose'              => 'Diagnoza / wykonane czynności',
         'order_comments'              => 'Uwagi do zlecenia',
         'order_accessories'           => 'Dołączone akcesoria',
+		
         'linklabels' => array(
             'orders_home'      => 'Zlecenia',
             'orders_home_list' => 'Lista zleceń',
@@ -65,6 +88,7 @@ return array(
             'orders_edit'      => 'Edytuj zlecenie',
             'orders_delete'    => 'Usuń zlecenie',
         ),
+		
         'placeholders' => array(
             'user_firstname_pl'      => 'Twoje imię',
             'user_lastname_pl'       => 'Twoje Nazwisko',
@@ -84,7 +108,9 @@ return array(
             'order_comments_pl'      => 'Wpisz uwagi do zlecenia',
             'order_accessories_pl'   => 'Wpisz dołączone akcesoria do sprzętu',
         ),
+		
         'buttons' => array(
+			'show'         => 'Pokaż',
             'edit'         => 'Edytuj',
             'save'         => 'Zapisz',
             'delete'       => 'Usuń',

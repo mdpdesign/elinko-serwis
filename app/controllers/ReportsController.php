@@ -4,12 +4,10 @@ use Serwis\Repositories\OrderRepositoryInterface;
 
 class ReportsController extends BaseController {
 
-	protected $user;
 	protected $orders;
 
 	public function __construct(OrderRepositoryInterface $order)
 	{
-		$this->user = Auth::user();
 		$this->order = $order;
 	}
 
@@ -28,7 +26,7 @@ class ReportsController extends BaseController {
 		// ile zlecen w danym dniu, os Y - ilosc zlecen, os X - daty od pierwszego do ostatniego zlecenia z zakresu
 		$values = $this->order->orderPerDay();
 
-		return View::make('reports.index')->withUser($this->user)
+		return View::make('reports.index')
 			->withDates($values->lists('date'))
 			->withValues($values->lists('count'))
 			->withData($values)

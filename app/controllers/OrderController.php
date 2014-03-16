@@ -63,7 +63,7 @@ class OrderController extends BaseController {
 					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch', null), Input::get('owner', null), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
 					
 					// zapamietujemy filtrowanie do nastepnego request'u
-					Input::flashOnly('status', 'branch', 'order', 'perpage');
+					Input::flashOnly('status', 'branch', 'owner', 'order', 'perpage');
 
 					// jesli po filtrowaniu kolekcja jest pusta pokaz informacje
 					if ($orders->isEmpty())
@@ -139,7 +139,7 @@ class OrderController extends BaseController {
 
 			return Redirect::route('admin.orders.show', $order->id)->withSuccess(trans('admin.message.order_added'));
 		}
-		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->errors);
+		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->validationErrors);
 	}
 	/**
 	 * Display the specified resource.
@@ -205,7 +205,7 @@ class OrderController extends BaseController {
 			return Redirect::route('admin.orders.show', $id)->withSuccess(trans('admin.message.order_updated'));
 		}
 		// jesli nie zapisano powroc do edycji z informacjami o bledach
-		return Redirect::route('admin.orders.edit', $id)->withInput($order->attributes)->withErrors($order->errors);
+		return Redirect::route('admin.orders.edit', $id)->withInput($order->attributes)->withErrors($order->validationErrors);
 	}
 
 	/**

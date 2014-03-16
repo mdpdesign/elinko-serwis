@@ -76,7 +76,7 @@ body {
 }
 
 .input-inline {
-	margin-right: 5px;
+	margin: 2px;
 	display: inline-block;
 }
 
@@ -147,6 +147,11 @@ th.netto, th.brutto {
 	width: 7%;
 }
 
+/* Ustawienia */
+.user-table-buttons {
+	margin-bottom: 10px;
+}
+
 /* Wykresy */
 .chartContainer {
 	padding: 20px 0;
@@ -160,4 +165,5 @@ th.netto, th.brutto {
 /* stopka */
 .credits {
 	text-align: center;
+	margin: 10px;
 }

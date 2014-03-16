@@ -21,9 +21,9 @@
 	<div class="col-md-12">
 		<div class="page-header">
 			@if (isset($search)) 
-			<h2>{{ 'Wyniki wyszukiwania dla słowa: "' . $search . "\"" }}</h2>
+			<h2>{{ trans('admin.message.search_results', ['search' => $search]) }}</h2>
 			@endif
-			<h3>{{ trans('admin.message.order_list') }} <small>Aktualna data: {{ date('d-m-Y') }}</small> </h3>
+			<h3>{{ trans('admin.message.order_list') }} <small>{{ trans('admin.message.actual_date') }} {{ date('d-m-Y') }}</small> </h3>
 		</div>
 	</div>
 </div> <!-- #orders-header  -->
@@ -191,7 +191,7 @@
 							{{ Form::select('mass_status', ['' => 'Wybierz nowy status'] + $statuses, null, ['class' => 'form-control input-sm']) }}
 						</span>
 						<span class="input-inline bottom">
-							{{ Form::submit('Zapisz', ['class' => 'btn btn-default btn-sm']) }}
+							{{ Form::submit(trans('admin.message.buttons.save'), ['class' => 'btn btn-default btn-sm']) }}
 						</span>
 					</div>
 				</div>

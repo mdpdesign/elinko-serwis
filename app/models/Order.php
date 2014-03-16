@@ -1,10 +1,17 @@
 <?php
 
-class Order extends BaseModel {
+use LaravelBook\Ardent\Ardent;
 
+class Order extends Ardent {
+	
+	/**
+	 * Pola zabezpieczone przed masowa edycja (Mass Assignment)
+	 *
+	 * @var array
+	 */
 	protected $guarded = array('id');
 
-	protected static $rules = array(
+	public static $rules = array(
 		'status_id'     => 'required',
 		'user_id'       => 'integer',
 		'item'          => 'required',
@@ -36,8 +43,6 @@ class Order extends BaseModel {
 		'branch_id'     => 'Oddział'
 	);
 
-	public $fields = array();
-
 	/**
 	* Event deleted, wykonuje czynnosci kiedy Order jest usuniety
 	* @param  string $value
@@ -47,7 +52,7 @@ class Order extends BaseModel {
 	{
 		parent::boot();
 
-	// Setup event bindings...
+		// Setup event bindings...
 		Order::deleted( function($order)
 		{
 			DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();

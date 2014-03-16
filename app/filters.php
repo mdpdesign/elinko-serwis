@@ -15,7 +15,7 @@ App::before(function($request)
 {
 	DB::listen(function($sql, $bindings, $time)
 	{
-                //echo "<p>$sql</p>";
+        //echo "<p>$sql</p>";
 		//var_dump($bindings);
 	});
 });
@@ -47,6 +47,26 @@ Route::filter('auth.basic', function()
 {
 	return Auth::basic();
 });
+
+/*
+|--------------------------------------------------------------------------
+| Authentication ACL Filters
+|--------------------------------------------------------------------------
+|
+| The following filters are used to verify that the user of the current
+| session is logged into this application. And have specific Role to manage
+| Users, Orders etc.
+|
+*/
+
+Route::filter('admin_role', function()
+{
+    if (! Entrust::hasRole('Admin') ) // Checks the current user
+    {
+        App::abort(403, 'Unauthorized action.');
+    }
+});
+Route::when('admin/settings*', 'admin_role');
 
 /*
 |--------------------------------------------------------------------------

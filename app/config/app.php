@@ -110,6 +110,7 @@ return array(
 		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Barryvdh\DomPDF\ServiceProvider',
 		'Dinesh\Barcode\BarcodeServiceProvider',
+		'Zizaco\Entrust\EntrustServiceProvider',
 		'Serwis\SerwisServiceProvider',
 	),
 
@@ -177,6 +178,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'PDF' 			  => 'Barryvdh\DomPDF\Facade',
+		'Entrust'		  => 'Zizaco\Entrust\EntrustFacade',
 	),
 
 );

@@ -30,7 +30,6 @@
 @stop
 
 @section('footer-scripts')
-{{-- HTML::script('js/vendor/chart.min.js') --}}
 {{ HTML::script('js/vendor/d3.min.js') }}
 {{ HTML::script('js/vendor/nv.d3.min.js') }}
 

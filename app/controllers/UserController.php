@@ -1,10 +1,14 @@
 <?php
 
-class UserController extends \BaseController {
+use Serwis\Repositories\UserRepositoryInterface;
 
-	public function __construct()
+class UserController extends \BaseController {
+	
+	protected $user;
+
+	public function __construct(UserRepositoryInterface $user)
 	{
-		$this->beforeFilter('auth');
+		$this->user = $user;
 	}
 
 	/**
@@ -14,8 +18,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-		$user = Auth::user();
-		return View::make('users.index')->withUser($user);
+		return View::make('users.index');
 	}
 
 	/**
@@ -46,7 +49,17 @@ class UserController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$current_user = Auth::user();
+		
+		if ($id == $current_user->id or $current_user->hasRole('Admin'))
+		{
+			($id == $current_user->id) ? $user = $current_user : $user = $this->user->find($id);
+			return View::make('users.show')->withUser($user);
+		}
+		else
+		{
+			return Redirect::route('admin.userprofile.show', $current_user->id)->withErrors('Nie możesz oglądać profilu innego Użytkownika!');
+		}
 	}
 
 	/**
@@ -57,16 +70,18 @@ class UserController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+		$current_user = Auth::user();
+		
 		// Jesli uzytkownik zalogowany edytuje swoje dane
-		if ($id == Auth::user()->id)
+		if ($id == $current_user->id or $current_user->hasRole('Admin'))
 		{
-			$user = Auth::user()->find($id);
+			($id == $current_user->id) ? $user = $current_user : $user = $this->user->find($id);
 			return View::make('users.edit')->withUser($user);
 		}
-		// jesli uzytkownik zalogowany probuje edytowac dane kogos innego
+		// jesli uzytkownik zalogowany probuje edytowac dane innego profilu
 		else
 		{
-			return Redirect::route('admin.users.index')->withErrors( trans('admin.message.cannot_edit_other_user') );
+			return Redirect::route('admin.userprofile.show', $current_user->id)->withErrors( trans('admin.message.cannot_edit_other_user') );
 		}
 	}
 
@@ -78,33 +93,20 @@ class UserController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		// zasady walidacji logowania
-		$rules = array(
-			'firstname' => 'required|alpha|min:3',
-			'lastname' => 'required|alpha|min:3',
-			'email' => 'required|email',
-			'password' => 'required|min:5'
-		);
-
-		$validator = Validator::make(Input::all(), $rules);
-
-		// walidacja formularza logowania
-		if ($validator->fails()) {
-			// 1. walidacja niepoprawna
-			// 2. przekierowanie do ponownej edycji z informacja o bledach
-			return Redirect::route('admin.users.edit', Auth::user()->id)->withErrors($validator)->withInput();
-		} else {
+		
+		$user = $this->user->fillUser($id, Input::all());
+		
+		if ($user->updateUniques())
+		{
 			// 1. walidacja poprawna
-			// 2. zaktualizuj dane uzytkownika
-			// 3. przekierowanie do strony profilu
-			$user = Auth::user();
-			$user->firstname = Input::get('firstname');
-			$user->lastname = Input::get('lastname');
-			$user->email = Input::get('email');
-			$user->password = Hash::make(Input::get('password'));
-			$user->save();
-
-			return Redirect::route('admin.users.index', $user->id)->withSuccess( trans('admin.message.user_data_changed_success') );
+			// 2. przekierowanie do strony profilu
+			return Redirect::route('admin.userprofile.show', $id)->withSuccess( trans('admin.message.user_data_changed_success') );
+		} 
+		else
+		{
+			// 1. walidacja niepoprawna
+			// 2. przekieruj spowrotem z bledami i danymi z formularza
+			return Redirect::route('admin.userprofile.edit', $id)->withErrors($user->validationErrors)->withInput();
 		}
 	}
 

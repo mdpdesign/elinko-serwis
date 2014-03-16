@@ -29,7 +29,7 @@
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-			<![endif]-->
+		<![endif]-->
 		</head>
 
 		<body>
@@ -39,7 +39,7 @@
 				<div class="container">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-							<span class="sr-only">Przełącz nawigację</span>
+							<span class="sr-only">{{ trans('admin.message.switch_nav') }}</span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
@@ -56,12 +56,12 @@
 									<li><a href="{{ route('admin.orders.index') }}"><span class="glyphicon glyphicon-th-list"></span>&nbsp;{{ trans('admin.message.linklabels.orders_home_list') }}</a></li>
 									<li><a href="{{ route('admin.orders.create') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp;{{ trans('admin.message.linklabels.orders_add') }}</a></li>
 									<li class="divider"></li>
-									<li class="dropdown-header">Pokaż zlecenia:</li>
-									<li><a class="open-all" href="#">Rozwiń wszystkie</a></li>
-									<li><a class="close-all" href="#">Zwiń wszystkie</a></li>
+									<li class="dropdown-header">{{ trans('admin.message.show_orders') }}</li>
+									<li><a class="open-all" href="#">{{ trans('admin.message.show_all') }}</a></li>
+									<li><a class="close-all" href="#">{{ trans('admin.message.hide_all') }}</a></li>
 									<li class="divider"></li>
-									<li class="dropdown-header">Statystyki:</li>
-									<li><a href="{{ route('admin.orders.reports') }}">Pokaż statystyki</a></li>
+									<li class="dropdown-header">{{ trans('admin.message.statistics') }}</li>
+									<li><a href="{{ route('admin.orders.reports') }}">{{ trans('admin.message.show_statistics') }}</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -74,8 +74,11 @@
 						{{ Form::close() }}
 
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="{{ route('admin.users.index') }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.message.edit_user') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ $user->firstname .' '. $user->lastname }}</a>
-							<li><a href="{{ URL::to('logout') }}"><span class="glyphicon glyphicon-off"></span> Wyloguj</a></li>	
+							@if (Auth::user()->hasRole('Admin')) 
+								<li><a href="{{ route('admin.settings.index') }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('Zmień ustawienia aplikacji') }}"><span class="glyphicon glyphicon-dashboard"></span><span class="hidden-sm hidden-md">&nbsp;{{ trans('admin.message.settings') }}</span></a></li>
+							@endif
+							<li><a href="{{ route('admin.userprofile.show', App::make('SerwisHelper')->authUserId()) }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.message.edit_user') }}"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm hidden-md">&nbsp;{{ App::make('SerwisHelper')->authUserFullName() }}</span></a>
+							<li><a href="{{ URL::to('logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;{{ trans('admin.message.logout') }}</a></li>	
 						</ul>
 					</div><!--/.nav-collapse -->
 				</div>
@@ -91,7 +94,7 @@
 
 				<div class="row credits">
 					<div class="col-md-12">
-						Projekt i wykonanie <a href="http://www.mdpdesign.pl">mdpdesign.pl</a> &copy; {{ date('Y') }}
+						{{ trans('admin.message.app_credits', ['date' => date('Y')]) }}
 					</div>
 				</div>
 

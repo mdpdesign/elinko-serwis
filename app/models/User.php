@@ -1,9 +1,54 @@
 <?php
 
+use LaravelBook\Ardent\Ardent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Zizaco\Entrust\HasRole;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends Ardent implements UserInterface, RemindableInterface {
+
+	// ACL
+	use HasRole;
+
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'users';
+	
+	/**
+	 * Pola zabezpieczone przed masowa edycja (Mass Assignment).
+	 *
+	 * @var array
+	 */
+	protected $guarded = array('id', 'password');
+
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = array('password');
+	
+	/**
+	 * Zasady walidacji dla pol Uzytkownika
+	 *
+	 * @var array
+	 */
+	public static $rules = array(
+		'firstname' => 'required|alpha|min:3',
+		'lastname' => 'required|alpha|min:3',
+		'email' => 'required|email|unique',
+		'password' => 'required|min:5'
+	);
+	
+	/**
+	 * Automatically Transform Secure-Text Attributes
+	 * @var array 
+	 */
+	public static $passwordAttributes  = array('password');
+	public $autoHashPasswordAttributes = true;
 
 	/**
 	 * Relacje z innymi Modelami
@@ -12,20 +57,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         return $this->hasMany('Order');
     }
-
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
-
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array('password');
 
 	/**
 	 * Pobierz pelna nazwe uzytkowniak

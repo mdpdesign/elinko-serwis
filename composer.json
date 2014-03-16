@@ -9,7 +9,9 @@
 		"way/generators": "dev-master",
 		"barryvdh/laravel-ide-helper": "1.*",
 		"barryvdh/laravel-dompdf": "dev-master",
-		"dinesh/barcode": "dev-master"
+		"dinesh/barcode": "dev-master",
+		"zizaco/entrust": "dev-master",
+		"laravelbook/ardent": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

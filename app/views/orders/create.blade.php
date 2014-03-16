@@ -6,8 +6,8 @@
 
 	<div class="col-md-12">
 		<div class="page-header">
-			<h3>Dodaj nowe zlecenie</strong></h3>
-			<h4>Uzupełnij wszystkie dane</h4>
+			<h3>{{ trans('admin.message.order_add_new') }}</strong></h3>
+			<h4>{{ trans('admin.message.order_fill_all_fields') }}</h4>
 		</div>
 	</div>
 
