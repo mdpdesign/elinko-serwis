@@ -1,6 +1,8 @@
 <?php
 
-use Branch, Status, User;
+use Branch;
+use Status;
+use User;
 
 class OrderController extends BaseController {
 	
