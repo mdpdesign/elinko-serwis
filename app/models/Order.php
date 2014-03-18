@@ -164,6 +164,7 @@ class Order extends Ardent {
 	 * @param  string $status 	Status zlecenia
 	 * @param  string $branch 	Oddzial zlecenia
 	 * @param  string $order 	Kolejnosc sortowania Id zlecenia
+	 * 
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
 	public function getFilteredResults($status = null, $branch = null, $user = null, $order = 'DESC')
@@ -187,7 +188,7 @@ class Order extends Ardent {
 	 * @return String
 	 */
 	public function getModifiedAttributes(array $before, array $after) {
-		$keys = array_keys(array_diff($after, $before));
+		$keys = array_keys(array_diff_assoc($after, $before));
 		$combined = array_combine($keys, $keys);
 		return $result = implode(', ', array_values(array_intersect_key(self::$named_fields, $combined)));
 	}

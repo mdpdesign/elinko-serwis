@@ -143,6 +143,13 @@
 </div>
 {{ Form::close() }}
 
+@if (Session::has('modified'))
+{{ var_dump(Session::get('before')) }}
+{{ var_dump(Session::get('after')) }}
+{{ var_dump(Session::get('modified')) }}
+{{ var_dump(Session::get('diff')) }}
+@endif
+
 <div class="panel-group" id="accordion">
   <div class="panel panel-default">
     <div class="panel-heading">

@@ -28,6 +28,7 @@
 									<th>{{ trans('admin.message.user_firstname') }}</th>
 									<th>{{ trans('admin.message.user_lastname') }}</th>
 									<th>{{ trans('admin.message.user_email') }}</th>
+									<th>{{ trans('admin.message.user_role') }}</th>
 									<th>{{ trans('admin.message.buttons.edit') }}</th>
 								</tr>
 							</thead>
@@ -38,6 +39,7 @@
 									<td>{{ $user->firstname }}</td>
 									<td>{{ $user->lastname }}</td>
 									<td>{{ $user->email }}</td>
+									<td>{{ $user->roles->first()->name }}</td>
 									<td><a href="{{ route('admin.settings.users.show', $user->id) }}" class="btn btn-default btn-xs">{{ trans('admin.message.buttons.show') }}</a></td>
 								</tr>
 								@endforeach

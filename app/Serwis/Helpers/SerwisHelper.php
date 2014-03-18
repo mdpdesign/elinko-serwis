@@ -1,6 +1,7 @@
 <?php namespace Serwis\Helpers;
 
 use Illuminate\Support\Facades\Auth;
+use Role;
 
 class SerwisHelper {
 	
@@ -29,6 +30,10 @@ class SerwisHelper {
 	 */
 	public function authUserEmail() {
 		return Auth::user()->email;
+	}
+	
+	
+	public function roleLists() {
 	}
 }
 /* 

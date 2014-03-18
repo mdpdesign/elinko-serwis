@@ -1,5 +1,7 @@
 <?php
 
+use Branch, Status, User;
+
 class OrderController extends BaseController {
 	
 	protected $orders;
@@ -15,6 +17,7 @@ class OrderController extends BaseController {
 	 * @return Response
 	 */
 	public function index() {
+		
 		$user = Auth::user();
 		
 		// jesli kolekcja jest pusta pokaz informacje ze nie ma co pokazac
@@ -88,8 +91,8 @@ class OrderController extends BaseController {
 				
 				// pokaz cala liste, resetowanie ew. sortowania itp
 				Input::flush();
-				
-				return View::make('orders.index')->withUser($user)
+					
+				return View::make('orders.index')
 				->withUsers($usersList)
 				->withOrders($orders)
 				->withStatuses($status)
@@ -200,7 +203,7 @@ class OrderController extends BaseController {
 		//jesli poprawnie zapisano zlecenie do bazy
 		if ($order->save()) {
 			$order->status()->sync([Input::get('status_id')]);		
-			$order->history()->create(['event' => trans('admin.message.order_modified_by') . $user->full_name . ' zmiana: ' . $order->getModifiedAttributes($before, $after)]);
+			$order->history()->create( array('event' => trans('admin.message.order_modified_by', array('user' => $user->full_name, 'message' => (($mod = $order->getModifiedAttributes($before, $after)) ? ' zmiana: ' . $mod : ' - zapis bez modyfikacji.')))) );
 			
 			return Redirect::route('admin.orders.show', $id)->withSuccess(trans('admin.message.order_updated'));
 		}

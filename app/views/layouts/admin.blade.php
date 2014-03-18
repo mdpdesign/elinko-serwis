@@ -74,9 +74,11 @@
 						{{ Form::close() }}
 
 						<ul class="nav navbar-nav navbar-right">
-							@if (Auth::user()->hasRole('Admin')) 
+							
+							@if (Auth::user()->hasRole('Administrator'))
 								<li><a href="{{ route('admin.settings.index') }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('Zmień ustawienia aplikacji') }}"><span class="glyphicon glyphicon-dashboard"></span><span class="hidden-sm hidden-md">&nbsp;{{ trans('admin.message.settings') }}</span></a></li>
 							@endif
+
 							<li><a href="{{ route('admin.userprofile.show', App::make('SerwisHelper')->authUserId()) }}" class="admin-tooltip", data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.message.edit_user') }}"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm hidden-md">&nbsp;{{ App::make('SerwisHelper')->authUserFullName() }}</span></a>
 							<li><a href="{{ URL::to('logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;{{ trans('admin.message.logout') }}</a></li>	
 						</ul>

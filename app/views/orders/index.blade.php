@@ -2,7 +2,8 @@
 
 @section('content')
 
-<div class="errors row">
+<!-- bledy filtrowania wymyslic cos zebyy bledy byly przekazywane do sesji -->
+<!-- <div class="errors row">
 	<div class="col-md-12">
 	
 		@if ($errors->any())
@@ -15,7 +16,7 @@
 		@endif
 		
 	</div>
-</div>
+</div> -->
 
 <div id="orders-header" class="row">
 	<div class="col-md-12">
@@ -115,7 +116,11 @@
 							<div class="btn-group btn-group-xs">
 								<a href="{{ URL::route('admin.orders.show', $order->id) }}" class="btn-show-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open"></span></a>
 								<a href="{{ URL::route('admin.orders.edit', $order->id) }}" class="btn-edit-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+								
+								@if (Auth::user()->hasRole('Administrator'))
 								<a href="#" class="btn-delete-order btn btn-primary btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash"></span></a>
+								@endif
+
 							</div>
 							<div class="btn-group btn-group-xs">
 								<a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-print"></span></a>

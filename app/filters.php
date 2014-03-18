@@ -61,9 +61,9 @@ Route::filter('auth.basic', function()
 
 Route::filter('admin_role', function()
 {
-    if (! Entrust::hasRole('Admin') ) // Checks the current user
+    if (! Entrust::hasRole('Administrator') ) // Checks the current user
     {
-        App::abort(403, 'Unauthorized action.');
+        return Redirect::route('admin.orders.index')->withErrors( trans('admin.message.app_settings_denied') );
     }
 });
 Route::when('admin/settings*', 'admin_role');

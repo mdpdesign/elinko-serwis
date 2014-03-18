@@ -13,11 +13,22 @@ use User;
 	 }
 	 
 	 /**
+	  * Tworzy instancje nowego uzytkownika wypelniajac wlasciwosci
+	  * @param array $input
+	  * @return \User
+	  */
+	 public function newUser($input) {
+		 $new_user = new User($input);
+		 $new_user->password = $input['password'];
+		 return $new_user;
+	 }
+	 
+	 /**
 	  * Zwraca cala kolekcje uzytkownikow
 	  * @return Collection User
 	  */
 	 public function getAll() {
-		 return $this->model->all();
+		 return $this->model->with('roles')->get();
 	 }
 	 
 	 /**
@@ -26,7 +37,7 @@ use User;
 	  * @return Collection User
 	  */
 	 public function find($user_id) {
-		 return $this->model->findOrFail($user_id);
+		 return $this->model->with('roles')->findOrFail($user_id);
 	 }
 	 
 	 /**

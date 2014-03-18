@@ -1,6 +1,15 @@
 <?php namespace Serwis\Repositories;
 
 interface UserRepositoryInterface {
+	
+	/**
+	 * Tworzy instancje nowego uzytkownika
+	 */
+	public function newUser($input);
+	
+	/**
+	 * Zwraca kolekcje wszystkich uzytkownikow
+	 */
 	public function getAll();
 	
 	/**
