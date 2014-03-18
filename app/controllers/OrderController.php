@@ -1,9 +1,5 @@
 <?php
 
-use Branch;
-use Status;
-use User;
-
 class OrderController extends BaseController {
 	
 	protected $orders;
