@@ -1,7 +1,7 @@
 <?php
 
 use Serwis\Repositories\UserRepositoryInterface;
-use Role;
+use \Role;
 
 class UserController extends \BaseController {
 	
