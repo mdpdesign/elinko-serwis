@@ -94,7 +94,7 @@
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
 						<td>
 							@if ($order->status->first()->id == 1)
-								<span class="text-danger"><strong>{{ $order->status->first()->name }}</strong></span>
+								<span class="status-warning label-danger"><span class="glyphicon glyphicon glyphicon-warning-sign"></span>&nbsp;{{ $order->status->first()->name }}</span>
 							@else 
 								{{ $order->status->first()->name }}
 							@endif
