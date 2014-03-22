@@ -1,6 +1,14 @@
 <?php
 
+use Serwis\Repositories\UserRepositoryInterface;
+
 class HomeController extends BaseController {
+	
+	protected $user;
+	
+	public function __construct(UserRepositoryInterface $user) {
+		$this->user = $user;
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -62,9 +70,11 @@ class HomeController extends BaseController {
 			// 1. walidacja poprawna
 			// 2. sprawdzanie poprawnosci zalogowania
 			if ( Auth::attempt($userinfo) ) {
+				
 				// 1. zalogowany poprawnie
-				// 2. pokaz admin
-				return Redirect::route('admin.orders.index')->withUser(Auth::user())->withSuccess( trans('signin.message.user_logged') );
+				// 2. wpisz do sesji dane zalogowanego uzytkownika
+				// 3. pokaz panel administracyjny
+				return Redirect::route('admin.orders.index')->withSuccess( trans('signin.message.user_logged') );
 			} else {
 				// 1. autentykacja niepoprawna
 				// 2. przekierowanie do logowania z informacja o bledach
@@ -77,8 +87,21 @@ class HomeController extends BaseController {
 
 	// ADMINISTRACJA - KONTROLERY
 	// ///////////////////////////////////////////////
+	
+	/**
+	 * Przekieruj do widoku wszystkich zlecen
+	 * @return Response
+	 */
 	public function getAdmin() {
-		return Redirect::route('admin.orders.index')->withUser(Auth::user());
+		return Redirect::route('admin.orders.index');
+	}
+	
+	/**
+	 * Pokaz widok z ustawieniami aplikacji
+	 * @return Response
+	 */
+	public function getSettings() {
+		return View::make('settings')->withUsers($this->user->getAll());
 	}
 
 }

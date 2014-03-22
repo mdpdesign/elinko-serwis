@@ -3,7 +3,7 @@
 @section('content')
 <style>
 @page {
-	margin: 1.4em;
+	margin: 1em;
 }
 </style>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -15,6 +15,10 @@
 				<p><strong>Data:</strong> {{ $order->created_at }}</p>
 				<p><strong>Klient:</strong> {{ $order->client }}</p>
 				<p><strong>Telefon:</strong> {{ $order->client_phone }}</p>
+				<p><strong>Urządzenie:</strong></p>
+				<p>{{ $order->item }}</p>
+				<p><strong>Opis zlecenia:</strong></p>
+				<p>{{ $order->get_short_description() }}</p>
 			</div>
 		</td>
 	</tr>

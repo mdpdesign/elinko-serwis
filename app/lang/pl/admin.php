@@ -12,20 +12,47 @@ return array(
 
     'message' => array(
         'appname'                     => 'Serwis Elinko',
-        'contact_administrator'       => 'Wystąpił błąd skontaktuj się z administratorem: marek@mdpdesign.pl',
+		'app_settings'					=> 'Ustawienia aplikacji',
+		'app_settings_denied'			=> 'Nie masz uprawnień do zmiany ustawień aplikacji! Skontaktuj się z Administratorem.',
+		'switch_nav'					=> 'Przełącz nawigację',
+		'show_orders'					=> 'Pokaż zlecenia:',
+		'show_all'						=> 'Rozwiń wszystkie',
+		'hide_all'						=> 'Zwiń wszystkie',
+		'statistics'					=> 'Statystyki:',
+		'show_statistics'				=> 'Pokaż statystyki',
+		'settings'						=> 'Ustawienia',
+		'logout'						=> 'Wyloguj',
+		'app_credits'					=> 'Projekt i wykonanie <a href="http://www.mdpdesign.pl">mdpdesign.pl</a> &copy; :date',
+		
+		'actual_date'					=> 'Aktualna data',
+		'manage_users'					=> 'Zarządzaj Użytkownikami',
+		'add_new_user'					=> 'Dodaj Użytkownika',
+		
+		'search_results'				=> 'Wyniki wyszukiwania dla słowa: ":search"',
+        
+		'contact_administrator'       => 'Wystąpił błąd skontaktuj się z administratorem: marek@mdpdesign.pl',
         'page_title'                  => 'Serwis Elinko - panel administracyjny',
         'edit_user'                   => 'Edytuj dane użytkownika',
         'logged_as'                   => 'Zalogowany jako: ',
+		
+		'user_role'						=> 'Rola:',
+		
         'user_firstname'              => 'Imię:',
         'user_lastname'               => 'Nazwisko:',
         'user_email'                  => 'E-mail:',
-        'new_password'                => 'Nowe / obecne hasło:',
+		'new_password'                => 'Hasło:',
+        'edit_password'                => 'Nowe / obecne hasło:',
         'user_updated_at'             => 'Ostatnia aktualizacja danych:',
         'cannot_edit_other_user'      => 'Nie możesz edytować danych innego Użytkownika! Nie ładnie...',
         'user_data_changed_success'   => 'Dane użytkownika zostały zmienione poprawnie',
         'by_user'                     => 'przez Użytkownika:',
-        'order_show_title'            => 'Zlecenie',
+        
+		'order_show_title'            => 'Zlecenie',
         'order_show_last_edited'      => 'Ostatnia edycja: ',
+		
+		'order_add_new'				=> 'Dodaj nowe zlecenie',
+		'order_fill_all_fields'			=> 'Uzupełnij wszystkie pola',
+		
         'order_show'                  => 'Pokaż szczegóły zlecenia',
         'order_added'                 => 'Nowe zlecenie dodane poprawnie.',
         'order_updated'               => 'Zlecenie zapisane poprawnie',
@@ -40,7 +67,7 @@ return array(
         'order_status'                => 'Status',
         'order_creator'               => 'Przyjmujący zlecenie',
         'order_created_by'            => 'Utworzono nowe zlecenie przez: ',
-        'order_modified_by'           => 'Modyfikacja zlecenia przez: ',
+        'order_modified_by'           => 'Modyfikacja zlecenia przez: :user :message',
         'order_rma'                   => 'Numer RMA',
         'order_item'                  => 'Sprzęt',
         'order_client'                => 'Klient',
@@ -58,6 +85,7 @@ return array(
         'order_diagnose'              => 'Diagnoza / wykonane czynności',
         'order_comments'              => 'Uwagi do zlecenia',
         'order_accessories'           => 'Dołączone akcesoria',
+		
         'linklabels' => array(
             'orders_home'      => 'Zlecenia',
             'orders_home_list' => 'Lista zleceń',
@@ -65,11 +93,13 @@ return array(
             'orders_edit'      => 'Edytuj zlecenie',
             'orders_delete'    => 'Usuń zlecenie',
         ),
+		
         'placeholders' => array(
-            'user_firstname_pl'      => 'Twoje imię',
-            'user_lastname_pl'       => 'Twoje Nazwisko',
-            'user_email_pl'          => 'Twój E-mail',
-            'new_password_pl'        => 'Twoje Nowe / obecne hasło',
+            'user_firstname_pl'      => 'Imię',
+            'user_lastname_pl'       => 'Nazwisko',
+            'user_email_pl'          => 'E-mail',
+			'new_password_pl'        => 'Hasło',
+            'new_password_edit_pl'		=> 'Nowe / obecne hasło',
             'order_item_pl'          => 'Wpisz co to za sprzęt, marka / model itp.',
             'order_client_pl'        => 'Imię i nazwisko Klienta',
             'order_client_phone_pl'  => '32-211-11-11 lub 600-300-200',
@@ -84,7 +114,9 @@ return array(
             'order_comments_pl'      => 'Wpisz uwagi do zlecenia',
             'order_accessories_pl'   => 'Wpisz dołączone akcesoria do sprzętu',
         ),
+		
         'buttons' => array(
+			'show'         => 'Pokaż',
             'edit'         => 'Edytuj',
             'save'         => 'Zapisz',
             'delete'       => 'Usuń',

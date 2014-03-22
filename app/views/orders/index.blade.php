@@ -2,13 +2,29 @@
 
 @section('content')
 
+<!-- bledy filtrowania wymyslic cos zebyy bledy byly przekazywane do sesji -->
+<!-- <div class="errors row">
+	<div class="col-md-12">
+	
+		@if ($errors->any())
+		<div class="alert alert-danger fade in">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+			@foreach($errors->all() as $error)
+			<p>{{ $error }}</p>
+			@endforeach
+		</div>
+		@endif
+		
+	</div>
+</div> -->
+
 <div id="orders-header" class="row">
 	<div class="col-md-12">
 		<div class="page-header">
 			@if (isset($search)) 
-			<h2>{{ 'Wyniki wyszukiwania dla słowa: "' . $search . "\"" }}</h2>
+			<h2>{{ trans('admin.message.search_results', ['search' => $search]) }}</h2>
 			@endif
-			<h3>{{ trans('admin.message.order_list') }} <small>Aktualna data: {{ date('d-m-Y') }}</small> </h3>
+			<h3>{{ trans('admin.message.order_list') }} <small>{{ trans('admin.message.actual_date') }} {{ date('d-m-Y') }}</small> </h3>
 		</div>
 	</div>
 </div> <!-- #orders-header  -->
@@ -24,6 +40,10 @@
 			<span class="input-inline">
 				{{ Form::label('branch', 'Oddział') }}
 				{{ Form::select('branch', (['' => 'Wszystkie'] + $branches), Input::get('branch', ''), ['class' => 'form-control input-sm']) }}
+			</span>
+			<span class="input-inline">
+				{{ Form::label('owner', 'Przyjmujący') }}
+				{{ Form::select('owner', (['' => 'Wszyscy'] + $users), Input::get('owner', ''), ['class' => 'form-control input-sm']) }}
 			</span>
 			<span class="input-inline">
 				{{ Form::label('order', 'Kolejność') }}
@@ -74,7 +94,7 @@
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
 						<td>
 							@if ($order->status->first()->id == 1)
-								<span class="text-danger"><strong>{{ $order->status->first()->name }}</strong></span>
+								<span class="status-warning label-danger"><span class="glyphicon glyphicon glyphicon-warning-sign"></span>&nbsp;{{ $order->status->first()->name }}</span>
 							@else 
 								{{ $order->status->first()->name }}
 							@endif
@@ -96,7 +116,11 @@
 							<div class="btn-group btn-group-xs">
 								<a href="{{ URL::route('admin.orders.show', $order->id) }}" class="btn-show-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open"></span></a>
 								<a href="{{ URL::route('admin.orders.edit', $order->id) }}" class="btn-edit-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+								
+								@if (Auth::user()->hasRole('Administrator'))
 								<a href="#" class="btn-delete-order btn btn-primary btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash"></span></a>
+								@endif
+
 							</div>
 							<div class="btn-group btn-group-xs">
 								<a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-print"></span></a>
@@ -172,7 +196,7 @@
 							{{ Form::select('mass_status', ['' => 'Wybierz nowy status'] + $statuses, null, ['class' => 'form-control input-sm']) }}
 						</span>
 						<span class="input-inline bottom">
-							{{ Form::submit('Zapisz', ['class' => 'btn btn-default btn-sm']) }}
+							{{ Form::submit(trans('admin.message.buttons.save'), ['class' => 'btn btn-default btn-sm']) }}
 						</span>
 					</div>
 				</div>
@@ -193,8 +217,8 @@
 
 <!-- Modal -->
 <div id="modal-delete" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	{{ Form::model( $orders, array( 'id' => 'form-delete-confirm', 'method' => 'DELETE', 'route' => array('admin.orders.destroy', 0))) }}
-	{{ Form::hidden('order_to_delete', null, ['id' => 'order-to-delete']) }}
+	{{ Form::model( $orders, array( 'id' => 'form-delete-confirm', 'method' => 'DELETE', 'route' => array('admin.orders.destroy', null))) }}
+	{{ Form::hidden('order_to_delete_action', route('admin.orders.index'), ['id' => 'order-to-delete-action']) }}
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
