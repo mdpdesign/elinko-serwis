@@ -1,10 +1,15 @@
 <?php
 
-class UserController extends \BaseController {
+use Serwis\Repositories\UserRepositoryInterface;
+use \Role;
 
-	public function __construct()
+class UserController extends \BaseController {
+	
+	protected $user;
+
+	public function __construct(UserRepositoryInterface $user)
 	{
-		$this->beforeFilter('auth');
+		$this->user = $user;
 	}
 
 	/**
@@ -14,8 +19,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-		$user = Auth::user();
-		return View::make('users.index')->withUser($user);
+		return View::make('users.index');
 	}
 
 	/**
@@ -25,7 +29,8 @@ class UserController extends \BaseController {
 	 */
 	public function create()
 	{
-		//
+		$roles = Role::orderBy('id')->lists('name', 'id');
+		return View::make('users.create')->withRole($roles);
 	}
 
 	/**
@@ -35,7 +40,17 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		$new_user = $this->user->newUser(Input::only(['firstname', 'lastname', 'email', 'password']));
+		
+		if ($new_user->save())
+		{
+			$new_user->attachRole( Input::get('role') );
+			return Redirect::route('admin.settings.users.show', $new_user->id)->withSuccess( trans('Uzytkownikzapisany poprawnie :)') );
+		}
+		else
+		{
+			return Redirect::back()->withErrors($new_user->validationErrors)->withInput();
+		}
 	}
 
 	/**
@@ -46,7 +61,17 @@ class UserController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$current_user = Auth::user();
+		
+		if ($id == $current_user->id or $current_user->can('manage_users'))
+		{
+			($id == $current_user->id) ? $user = $current_user : $user = $this->user->find($id);
+			return View::make('users.show')->withUser($user);
+		}
+		else
+		{
+			return Redirect::route('admin.userprofile.show', $current_user->id)->withErrors('Nie możesz oglądać profilu innego Użytkownika!');
+		}
 	}
 
 	/**
@@ -57,17 +82,61 @@ class UserController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		// Jesli uzytkownik zalogowany edytuje swoje dane
-		if ($id == Auth::user()->id)
+		$roles = Role::orderBy('id')->lists('name', 'id');
+		$current_user = Auth::user();
+		
+		// jesli aktualny uzytkownik (administrator) moze edytowac innych
+		if ( $current_user->can('manage_users') )
 		{
-			$user = Auth::user()->find($id);
-			return View::make('users.edit')->withUser($user);
+			// jesli administrator edytuje swoj profil
+			if ( $id == $current_user->id )
+			{
+				// pokaz formularz edycji administratora bez edycji rol
+				return View::make('users.edit')->withUser($current_user);
+			}
+			// jesli administrator edytuje inny profil, nawet innego administratora
+			else
+			{
+				// pokaz formularz edycji z edycja rol
+				$user = $this->user->find($id);
+				return View::make('users.edit')->withCanEditRoles(true)->withRoles($roles)->withUser($user);
+			}
 		}
-		// jesli uzytkownik zalogowany probuje edytowac dane kogos innego
-		else
+		// jesli aktualny uzytkownik nie jest administratorem
+		else 
 		{
-			return Redirect::route('admin.users.index')->withErrors( trans('admin.message.cannot_edit_other_user') );
+			// jesli aktualny uzytkownik edytuje swoj profil
+			if ( $id == $current_user->id )
+			{
+				// pokaz vidok edycji bez edycji rol
+				return View::make('users.edit')->withUser($current_user);
+			}
+			// jesli uzytkownik probuje dycji innego profilu
+			else
+			{
+				// przekieruj do widoku swojego profili z bledami ze nie moze edytowac innego profilu!
+				return Redirect::route('admin.userprofile.show', $current_user->id)->withErrors( trans('admin.message.cannot_edit_other_user') );
+			}
+				
 		}
+		
+		
+//		// Jesli uzytkownik zalogowany edytuje swoje dane
+//		if ($id == $current_user->id)
+//		{
+//			if ($current_user->can('manage_users') and !$current_user->hasRole('Administrator'))
+//			{
+//				($id == $current_user->id) ? $user = $current_user : $user = $this->user->find($id);
+//				return View::make('users.edit')->withUser($user);
+//			}
+//			// edytuj aktualnego uzytkownika, bez mozliwosci przypisania roli
+//			return View::make('users.edit')->withUser($user);
+//		}
+//		// jesli uzytkownik zalogowany probuje edytowac dane innego profilu
+//		else
+//		{
+//			return Redirect::route('admin.userprofile.show', $current_user->id)->withErrors( trans('admin.message.cannot_edit_other_user') );
+//		}
 	}
 
 	/**
@@ -78,33 +147,29 @@ class UserController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		// zasady walidacji logowania
-		$rules = array(
-			'firstname' => 'required|alpha|min:3',
-			'lastname' => 'required|alpha|min:3',
-			'email' => 'required|email',
-			'password' => 'required|min:5'
-		);
-
-		$validator = Validator::make(Input::all(), $rules);
-
-		// walidacja formularza logowania
-		if ($validator->fails()) {
-			// 1. walidacja niepoprawna
-			// 2. przekierowanie do ponownej edycji z informacja o bledach
-			return Redirect::route('admin.users.edit', Auth::user()->id)->withErrors($validator)->withInput();
-		} else {
+		$current_user = Auth::user();
+		$user = $this->user->fillUser($id, Input::only('firstname', 'lastname', 'email', 'password'));
+		
+		if ($user->updateUniques())
+		{
 			// 1. walidacja poprawna
-			// 2. zaktualizuj dane uzytkownika
-			// 3. przekierowanie do strony profilu
-			$user = Auth::user();
-			$user->firstname = Input::get('firstname');
-			$user->lastname = Input::get('lastname');
-			$user->email = Input::get('email');
-			$user->password = Hash::make(Input::get('password'));
-			$user->save();
-
-			return Redirect::route('admin.users.index', $user->id)->withSuccess( trans('admin.message.user_data_changed_success') );
+			// 2. przekierowanie do strony profilu
+			if ($current_user->can('manage_users')) 
+			{
+				$user->roles()->sync( [Input::get('role')] );
+				return Redirect::route('admin.settings.users.show', $id)->withSuccess( trans('admin.message.user_data_changed_success') );
+			}
+			return Redirect::route('admin.userprofile.show', $id)->withSuccess( trans('admin.message.user_data_changed_success') );
+		} 
+		else
+		{
+			// 1. walidacja niepoprawna
+			// 2. przekieruj spowrotem z bledami i danymi z formularza
+			if ($current_user->can('manage_users')) 
+			{
+				return Redirect::route('admin.settings.users.edit', $id)->withErrors($user->validationErrors)->withInput();
+			}
+			return Redirect::route('admin.userprofile.edit', $id)->withErrors($user->validationErrors)->withInput();
 		}
 	}
 

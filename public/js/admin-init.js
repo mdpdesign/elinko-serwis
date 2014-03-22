@@ -13,8 +13,8 @@ $( ".warning" ).focus(function() {
 $( '.btn-delete-order' ).click(function() {
     var value = $(this).attr('data-order-id');
     var $deleteForm = $('#form-delete-confirm');
-    var location = window.location;
-    $deleteForm.find('#order-to-delete').attr('value', value);
+    var location = $deleteForm.find('#order-to-delete-action').attr('value');
+    //$deleteForm.find('#order-to-delete').attr('value', value);
     $deleteForm.attr('action', location+'/'+value);
 });
 

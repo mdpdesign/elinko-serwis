@@ -1,10 +1,17 @@
 <?php
 
-class Order extends BaseModel {
+use LaravelBook\Ardent\Ardent;
 
+class Order extends Ardent {
+	
+	/**
+	 * Pola zabezpieczone przed masowa edycja (Mass Assignment)
+	 *
+	 * @var array
+	 */
 	protected $guarded = array('id');
 
-	protected static $rules = array(
+	public static $rules = array(
 		'status_id'     => 'required',
 		'user_id'       => 'integer',
 		'item'          => 'required',
@@ -36,33 +43,40 @@ class Order extends BaseModel {
 		'branch_id'     => 'Oddział'
 	);
 
-	public $fields = array();
+	/**
+	* Event deleted, wykonuje czynnosci kiedy Order jest usuniety
+	* @param  string $value
+	* @return void
+	*/
+	public static function boot()
+	{
+		parent::boot();
 
-	 /**
-	 * Event deleted, wykonuje czynnosci kiedy Order jest usuniety
-	 * @param  string $value
-	 * @return void
-	 */
-	 public static function boot()
-	 {
-	 	parent::boot();
+		// Setup event bindings...
+		Order::deleted( function($order)
+		{
+			DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();
+		});
+	}
 
-			// Setup event bindings...
-	 	Order::deleted( function($order)
-	 	{
-	 		DB::table('history')->where('historable_id', '=', $order->id)->where('historable_type', '=', 'Order')->delete();
-	 	});
-	 }
+	/**
+	* Zwraca odpowiedni format daty i czasu
+	* @return DateTime
+	*/
+	public function get_short_updated_at()
+	{
+		$date = $this->updated_at;
+		if ($date) return $date->format('H:i:s d-m-Y');
+	}
 
-	 /**
-	  * Zwraca odpowiedni format daty i czasu
-	  * @return DateTime
-	  */
-	 public function get_short_updated_at()
-	 {
-	 	$date = $this->updated_at;
-	 	if ($date) return $date->format('H:i:s d-m-Y');
-	 }
+	/**
+	* Zwraca krotszy opis zleceniea (do wydruku etykiety serwisowej)
+	* @return DateTime
+	*/
+	public function get_short_description()
+	{
+		return ( strlen($this->description) > 90 ) ? substr($this->description, 0, strrpos(substr($this->description, 0, 90), ' ')) . ' (...)' : $this->description;
+	}
 
 
 	/**
@@ -126,12 +140,13 @@ class Order extends BaseModel {
 	 * @param  string $order 	Jaka jest kolejnosc
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getSearchQuery($term = '', $order = 'DESC', $status = '', $branch = '')
+	public function getSearchQuery($term = '', $order = 'ASC', $status = '', $branch = '')
 	{
-		return $this->orderBy('id', $order)->where('rma_number', 'LIKE', '%'. $term. '%')
+		return $this->where('rma_number', 'LIKE', '%'. $term. '%')
 					->orWhere('item', 'LIKE', '%'. $term. '%')
 					->orWhere('serial_number', 'LIKE', '%'. $term. '%')
 					->orWhere('pa_fv', 'LIKE', '%'. $term. '%')
+					->orWhere('ext_service', 'LIKE', '%'. $term. '%')
 					->orWhere('client', 'LIKE', '%'. $term. '%')
 					->orWhere('client_phone', 'LIKE', '%'. $term. '%')
 					->orWhere('description', 'LIKE', '%'. $term. '%')
@@ -139,7 +154,8 @@ class Order extends BaseModel {
 					->orWhere('comments', 'LIKE', '%'. $term. '%')
 					->orWhere('accesories', 'LIKE', '%'. $term. '%')
 					->where('status_id', '=', $status)
-					->where('branch_id', '=', $branch);
+					->where('branch_id', '=', $branch)
+					->orderBy('status_id', $order);
 	}
 
 
@@ -148,33 +164,19 @@ class Order extends BaseModel {
 	 * @param  string $status 	Status zlecenia
 	 * @param  string $branch 	Oddzial zlecenia
 	 * @param  string $order 	Kolejnosc sortowania Id zlecenia
+	 * 
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getFilteredResults($status = '', $branch = '', $order = 'ASC')
+	public function getFilteredResults($status = null, $branch = null, $user = null, $order = 'DESC')
 	{
+		if (empty($order)) $order = 'DESC';
 
-		if (is_null($order)) $order = 'ASC';
-
-		if ($status && $branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
-						->where('status_id', '=', $status)
-						->where('branch_id', '=', $branch);
-		}
-		else if ($status && !$branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
-						->where('status_id', '=', $status);
-		}
-		else if (!$status && $branch)
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order)
-						->where('branch_id', '=', $branch);
-		}
-		else
-		{
-			return $this->with('status')->with('branch')->orderBy('id', $order);
-		}
+		return $this->with('status')->with('branch')
+			->where(function($query) use ($status, $branch, $user) {
+				if (!empty($status)) $query->where('status_id', '=', $status);
+				if (!empty($branch)) $query->where('branch_id', '=', $branch);
+				if (!empty($user)) $query->where('user_id', '=', $user);
+			})->orderBy('status_id', 'ASC')->orderBy('id', $order);
 	}
 
 	/**
@@ -186,7 +188,7 @@ class Order extends BaseModel {
 	 * @return String
 	 */
 	public function getModifiedAttributes(array $before, array $after) {
-		$keys = array_keys(array_diff($after, $before));
+		$keys = array_keys(array_diff_assoc($after, $before));
 		$combined = array_combine($keys, $keys);
 		return $result = implode(', ', array_values(array_intersect_key(self::$named_fields, $combined)));
 	}

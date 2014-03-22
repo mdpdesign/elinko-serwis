@@ -15,6 +15,7 @@ class OrderController extends BaseController {
 	 * @return Response
 	 */
 	public function index() {
+		
 		$user = Auth::user();
 		
 		// jesli kolekcja jest pusta pokaz informacje ze nie ma co pokazac
@@ -26,16 +27,18 @@ class OrderController extends BaseController {
 		else
 		{
 
-			// listy statusow i oddzialow
+			// listy statusow, oddzialow, uzytkownikow
 			$branch = Branch::orderBy('id')->lists('name', 'id');
 			$status = Status::orderBy('id')->lists('name', 'id');
+			$usersList = User::all()->lists('full_name', 'id');
+			asort($usersList);
 
-			// jelsi istnieje zmienna search, wtedy wyszukujemy, pokaz tylko 
+			// jesli istnieje zmienna search, wtedy wyszukujemy, pokaz tylko 
 			// kolekce spelniajaca kryteria wyszukiwania
 			if (Input::get('search'))
 			{
 				$term = Input::get('search');
-				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'DESC'), Input::get('status'), Input::get('branch'))->paginate(Input::get('perpage', 20));
+				$orders = $this->orders->getSearchQuery($term, Input::get('order', 'ASC'), Input::get('status'), Input::get('branch'))->paginate(Input::get('perpage', 20));
 				
 				// jesli kolekcja nie spelnia kryteriow wyszukiwania pokaz informacje
 				if ($orders->isEmpty())
@@ -43,10 +46,12 @@ class OrderController extends BaseController {
 					// pokaz informacje ze nie ma wynikow wyszukiwania dla podanych kryteriow
 					return View::make('orders.empty')->withUser($user)->withErrors('Nie odnaleziono zleceń spełniających kryterium wyszukiwania');
 				}
+
 				// pokaz wyniki wyszukiwania
 				return View::make('orders.index')->withUser($user)->withOrders($orders)
 					->withStatuses($status)
 					->withBranches($branch)
+					->withUsers($usersList)
 					->withSearch($term);
 			}
 			// jesli nie wyszukujemy
@@ -54,24 +59,42 @@ class OrderController extends BaseController {
 			{
 
 				// jesli filtrujemy wyniki
-				if (Input::has('status') or Input::has('branch') or Input::has('order'))
+				if (Input::has('status') or Input::has('branch') or Input::has('owner') or Input::has('order'))
 				{
-					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch'), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
+					$orders = $this->orders->getFilteredResults(Input::get('status'), Input::get('branch', null), Input::get('owner', null), Input::get('order', 'ASC'))->with('user')->paginate(Input::get('perpage', 20));
+					
+					// zapamietujemy filtrowanie do nastepnego request'u
+					Input::flashOnly('status', 'branch', 'owner', 'order', 'perpage');
 
+					// jesli po filtrowaniu kolekcja jest pusta pokaz informacje
+					if ($orders->isEmpty())
+					{
+						return View::make('orders.index')->withUser($user)
+						->withUsers($usersList)
+						->withOrders($orders)
+						->withStatuses($status)
+						->withBranches($branch)
+						->withErrors('Zlecenia nie spełniają kryteriów filtrowania. Popraw filtry.');
+					}
+					
+					// pokaz wyniki filtrowania
 					return View::make('orders.index')->withUser($user)
+					->withUsers($usersList)
 					->withOrders($orders)
 					->withStatuses($status)
-					->withBranches($branch)
-					->withInput(Input::only('status', 'branch', 'order', 'perpage'));
+					->withBranches($branch);
 				}
 				// nie wyszukujemy, nie filtrujemy, pokaz wszystkie zlecenia
 				$orders = $this->orders->with('status')->with('branch')->with('user')->orderBy('status_id', 'ASC')->orderBy('id', 'DESC')->paginate(Input::get('perpage', 20));
-
-				return View::make('orders.index')->withUser($user)
+				
+				// pokaz cala liste, resetowanie ew. sortowania itp
+				Input::flush();
+					
+				return View::make('orders.index')
+				->withUsers($usersList)
 				->withOrders($orders)
 				->withStatuses($status)
-				->withBranches($branch)
-				->withInput(Input::old());
+				->withBranches($branch);
 			}
 		}
 		
@@ -115,9 +138,9 @@ class OrderController extends BaseController {
 			$order->branch()->attach(Input::get('branch_id'));
 			$order->history()->create(['event' => trans('admin.message.order_created_by') . User::find(Input::get('user_id'))->full_name ]);
 
-			return Redirect::route('admin.orders.index')->withSuccess(trans('admin.message.order_added'));
+			return Redirect::route('admin.orders.show', $order->id)->withSuccess(trans('admin.message.order_added'));
 		}
-		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->errors);
+		return Redirect::route('admin.orders.create')->withInput($order->attributes)->withErrors($order->validationErrors);
 	}
 	/**
 	 * Display the specified resource.
@@ -178,12 +201,12 @@ class OrderController extends BaseController {
 		//jesli poprawnie zapisano zlecenie do bazy
 		if ($order->save()) {
 			$order->status()->sync([Input::get('status_id')]);		
-			$order->history()->create(['event' => trans('admin.message.order_modified_by') . $user->full_name . ' zmiana: ' . $order->getModifiedAttributes($before, $after)]);
+			$order->history()->create( array('event' => trans('admin.message.order_modified_by', array('user' => $user->full_name, 'message' => (($mod = $order->getModifiedAttributes($before, $after)) ? ' zmiana: ' . $mod : ' - zapis bez modyfikacji.')))) );
 			
 			return Redirect::route('admin.orders.show', $id)->withSuccess(trans('admin.message.order_updated'));
 		}
 		// jesli nie zapisano powroc do edycji z informacjami o bledach
-		return Redirect::route('admin.orders.edit', $id)->withInput($order->attributes)->withErrors($order->errors);
+		return Redirect::route('admin.orders.edit', $id)->withInput($order->attributes)->withErrors($order->validationErrors);
 	}
 
 	/**
@@ -234,8 +257,8 @@ class OrderController extends BaseController {
 		$pdf = PDF::loadView('orders.printorder', ['order' => $order]);
 		return $pdf->stream($order->rma_number);
 
-		//return View::make('orders.printorder')
-		//->withOrder($order);
+		// return View::make('orders.printorder')
+		// ->withOrder($order);
 	}
 
 
@@ -258,7 +281,7 @@ class OrderController extends BaseController {
 		// https://github.com/dompdf/dompdf/blob/master/include/cpdf_adapter.cls.php
 		// http://www.unitconversion.org/typography/centimeters-to-points-computer-conversion.html
 		// etykietka 60mm x 50mm
-		$pdf = PDF::loadView('orders.printorderlabel', ['order' => $order])->setPaper(array(0,0, 141.73, 141.73 ));
+		$pdf = PDF::loadView('orders.printorderlabel', ['order' => $order])->setPaper(array(0, 0, 141.73, 170.07 ));
 		return $pdf->stream('label_' . $order->rma_number);
 
 	}

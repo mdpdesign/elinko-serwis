@@ -7,7 +7,7 @@
 	<div class="col-md-12">
 		<div class="page-header">
 			<h3>{{ trans('admin.message.order_show_title') }} <strong>{{ $order->rma_number }}</strong></h3>
-			<h4>{{ $order->history->last()->created_at . ' ' . $order->history->last()->event }}</h4>
+			<h4>{{ $order->history->first()->created_at . ' ' . $order->history->first()->event }}</h4>
 		</div>
 	</div>
 
@@ -134,7 +134,7 @@
 			{{ link_to_route('admin.orders.edit', trans('admin.message.buttons.edit'), $order->id, array('class' => 'btn btn-primary')) }}
 			{{ HTML::link('#', trans('admin.message.buttons.delete'), ['class' => 'btn btn-primary btn-danger', 'data-toggle' => 'modal', 'data-target' => '#myModal']) }}
 			{{-- link_to(URL::previous(), trans('admin.message.buttons.back_to_list'), ['class' => 'btn btn-primary']) --}}
-            {{ link_to_route('admin.orders.index', trans('admin.message.buttons.back_to_list'), null, ['class' => 'btn btn-primary']) }}
+            {{ link_to_route('admin.orders.index', trans('admin.message.buttons.back_to_list'), Input::old(), ['class' => 'btn btn-primary']) }}
             <a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary"><span class="glyphicon glyphicon-print"></span></a>
             <a href="{{ URL::route('admin.orders.printlabel', $order->id) }}" target="_blank" class="btn-print-label btn btn-primary"><span class="glyphicon glyphicon-barcode"></span></a>
 		</div>
@@ -142,6 +142,13 @@
 	</div>
 </div>
 {{ Form::close() }}
+
+@if (Session::has('modified'))
+{{ var_dump(Session::get('before')) }}
+{{ var_dump(Session::get('after')) }}
+{{ var_dump(Session::get('modified')) }}
+{{ var_dump(Session::get('diff')) }}
+@endif
 
 <div class="panel-group" id="accordion">
   <div class="panel panel-default">
@@ -169,10 +176,10 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">{{ trans('admin.message.order_delete_title') }}</h4>
+				<h4 class="modal-title" id="myModalLabel">{{ trans('admin.message.order_delete_title_single', ['rma' => $order->rma_number]) }}</h4>
 			</div>
 			<div class="modal-body">
-				<p>{{ trans('admin.message.order_delete_message') }}</p>
+				<p>{{ trans('admin.message.order_delete_message_single', ['rma' => $order->rma_number]) }}</p>
 			</div>
 			<div class="modal-footer">
 				{{ Form::button('Anuluj', ['class' => 'btn btn-default', 'data-dismiss' => 'modal']) }}
