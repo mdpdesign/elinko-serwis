@@ -14,6 +14,9 @@
 	<!-- Bootstrap core CSS -->
 	{{ HTML::style('css/bootstrap.css') }}
 
+	<!-- Fonts CSS -->
+	{{ HTML::style('css/font-elinko.css') }}
+
 	<!-- Custom styles for this template -->
 	{{ HTML::style('css/signin.css') }}
 
@@ -32,8 +35,8 @@
 			<div class="container">
 
 			@include('notifications')
-			
 			@yield('content')
+			@include('partials.credits')
 
 			</div> <!-- /container -->
 
