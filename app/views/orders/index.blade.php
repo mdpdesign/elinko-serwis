@@ -133,7 +133,7 @@
 	
 							<div class="collapse collapsible-details collapsible-details-{{ $order->id }}">
 								<div class="details-wrapper">
-									<table class="table table-bordered details-table">
+									<table class="table details-table">
 										<thead>
 											<tr>
 												<th width="15%">{{ trans('admin.message.order_serial_number') }}</th>
@@ -179,6 +179,7 @@
 											</tr>
 										</tbody>
 									</table><!-- table .details-table -->
+									<div class="details-shadow"></div>
 								</div><!-- .details-wrapper -->
 							</div><!-- .collapsible-details -->
 	
