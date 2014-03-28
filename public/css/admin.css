@@ -65,6 +65,7 @@ body {
 
 .table > tbody > tr > td.rma_details {
 	padding: 0;
+	border: none;
 }
 
 .details-wrapper {
