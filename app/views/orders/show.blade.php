@@ -1,5 +1,64 @@
 @extends('layouts.admin')
 
+@section('styles')
+{{ HTML::style('css/vendor/owl-carousel/owl.carousel.css') }}
+{{ HTML::style('css/vendor/owl-carousel/owl.theme.css') }}
+
+<style>
+#history {
+	margin-bottom: 1em;
+}
+.history-title {
+	margin-bottom: 1em;
+}
+#history .history-item {
+	margin: 0;
+}
+.history-item .date {
+}
+.history-item .event {
+	background-color: #5C6063;
+	color: lightblue;
+	padding: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	text-align: left;
+
+	-webkit-border-radius: 3px;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius: 3px;
+	-moz-border-radius-topleft: 0;
+	border-radius: 3px;
+	border-top-left-radius: 0;
+}
+.history-item p, .history-item h5 {
+	margin: 0;
+}
+.history-item h5 {
+	padding-left: 10px;
+}
+.history-item hr {
+	margin-top: 5px;
+	margin-bottom: 0;
+	border-top: 1px solid #E4E4E4;
+}
+
+.triangle-bottomleft {
+	margin-left: 5px;
+	width: 0;
+	height: 0;
+	border-bottom: 10px solid #5C6063;
+	border-right: 10px solid transparent;
+}
+</style>
+
+@stop
+
+@section('footer-scripts')
+{{ HTML::script('js/vendor/owl-carousel/owl.carousel.min.js') }}
+{{ HTML::script('js/owl-show-history.js') }}
+@stop
+
 @section('content')
 {{ Form::model($order) }}
 <div class="row">
@@ -143,31 +202,34 @@
 </div>
 {{ Form::close() }}
 
-@if (Session::has('modified'))
-{{ var_dump(Session::get('before')) }}
-{{ var_dump(Session::get('after')) }}
-{{ var_dump(Session::get('modified')) }}
-{{ var_dump(Session::get('diff')) }}
-@endif
-
-<div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Historia zlecenia</a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse">
-      <div class="panel-body">
-      	<ul class="history">
-        @foreach ( $order->history->reverse() as $history )
-        	<li>{{ $history->created_at }} {{ $history->event }}</li>
-        @endforeach
-        </ul>
-      </div>
-    </div>
-  </div>
+<div class="row">
+	<div class="col-md-12"><hr></div>
 </div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="history-title">Historia zlecenia:</h4>
+		<div class="history-panel">
+			<div id="history" class="owl-carousel">
+				@foreach ( $order->history->reverse() as $history )
+				<div class="history-item">
+					<div class="date">
+						<h5>{{ $history->created_at }}</h5>
+						<hr>
+					</div>
+					<div class="event-wrapper">
+						<div class="triangle-bottomleft"></div>
+						<div class="event">
+							<p>{{ $history->event }}</p>
+						</div>
+					</div>
+				</div>
+				@endforeach
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
