@@ -9,6 +9,7 @@
 	margin-bottom: 1em;
 }
 .history-title {
+	display: none;
 	margin-bottom: 1em;
 }
 #history .history-item {
@@ -208,8 +209,8 @@
 
 <div class="row">
 	<div class="col-md-12">
-		<h4 class="history-title">Historia zlecenia:</h4>
 		<div class="history-panel">
+			<h4 class="history-title">Historia zlecenia:</h4>
 			<div id="history" class="owl-carousel">
 				@foreach ( $order->history->reverse() as $history )
 				<div class="history-item">

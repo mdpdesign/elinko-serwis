@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	$('.history-title').css('display', 'block');
+
 	var $items = $('.history-item');
 	var count = ($items.length > 4) ? 4 : $items.length;
 	var countDSmall = ($items.length > 3) ? 3 : $items.length;
