@@ -63,8 +63,10 @@
 
 <div id="orders-table" class="row">
 	<div class="col-md-12">
+		
+		{{ Form::open(['method'=>'PATCH', 'action' => 'OrderController@massEdit']) }}
+		
 		<div class="table-responsive">
-			{{ Form::open(['method'=>'PATCH', 'action' => 'OrderController@massEdit']) }}
 			<table class="rma-table table table-striped">
 				<thead>
 					<tr>
@@ -90,7 +92,9 @@
 				<tbody>
 					@foreach ($orders as $order)
 					<tr class="rma-table-heading">
-						<td><strong>{{ $order->id }}</strong></td>
+						<td class="order-status {{ ($order->status->first()->id == 1) ? 'status-one' : 'nic' }}">
+							<strong>{{ $order->id }}</strong>
+						</td>
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
 						<td>
 							@if ($order->status->first()->id == 1)
@@ -108,24 +112,26 @@
 						<td>{{ $order->client_phone }}</td>
 						<td>{{ $order->branch->first()->name }}</td>
 						<td class="edit">
-							<button type="button" class="btn-details btn btn-primary btn-xs" data-toggle="collapse" data-target=".collapsible-details-{{ $order->id }}">
-								{{-- trans('admin.message.order_details') --}}
-								<span class="glyphicon glyphicon-tasks"></span>
-							</button>
-							{{-- link_to_route('admin.orders.edit', trans('admin.message.buttons.edit'), $order->id, ['class' => 'btn btn-primary btn-xs']) --}}
-							<div class="btn-group btn-group-xs">
-								<a href="{{ URL::route('admin.orders.show', $order->id) }}" class="btn-show-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open"></span></a>
-								<a href="{{ URL::route('admin.orders.edit', $order->id) }}" class="btn-edit-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
-								
-								@if (Auth::user()->hasRole('Administrator'))
-								<a href="#" class="btn-delete-order btn btn-primary btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash"></span></a>
-								@endif
-
+							
+							<div class="btn-group">
+								<a type="button" class="btn btn-default btn-sm btn-details" data-toggle="collapse" data-target=".collapsible-details-{{ $order->id }}">Rozwiń</a>
+								<a class="btn btn-default btn-sm" href="{{ URL::route('admin.orders.show', $order->id) }}">Pokaż</a>
+								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+									<span class="caret"></span>
+									<span class="sr-only">Pokaż menu</span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="{{ URL::route('admin.orders.show', $order->id) }}"><span class="glyphicon glyphicon-eye-open">&nbsp;</span>Pokaż zlecenie</a></li>
+									<li><a href="{{ URL::route('admin.orders.edit', $order->id) }}"><span class="glyphicon glyphicon-pencil">&nbsp;</span>Edytuj zlecenie</a></li>
+									@if (Auth::user()->hasRole('Administrator'))
+									<li><a href="#" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash">&nbsp;</span>Usuń zlecenie</a></li>
+									@endif
+									<li class="divider"></li>
+									<li><a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank"><span class="glyphicon glyphicon-print">&nbsp;</span>Drukuj potwierdzenie</a></li>
+									<li><a href="{{ URL::route('admin.orders.printlabel', $order->id) }}" target="_blank"><span class="glyphicon glyphicon-barcode">&nbsp;</span>Drukuj etykietę</a></li>
+								</ul>
 							</div>
-							<div class="btn-group btn-group-xs">
-								<a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-print"></span></a>
-								<a href="{{ URL::route('admin.orders.printlabel', $order->id) }}" target="_blank" class="btn-print-order btn btn-primary btn-xs"><span class="glyphicon glyphicon-barcode"></span></a>							
-							</div>
+							
 						</td>
 					</tr>
 					<tr>
@@ -188,29 +194,26 @@
 					@endforeach
 				</tbody>
 			</table>
+		</div> <!-- .table responsive  -->
 
-			<div id="edit-form" class="row">
-				<div class="col-md-12">
-					<div class="input-row">
-						<span class="input-inline bottom">
-							{{ Form::label('mass_status', 'Zmień status dla zaznaczonych na:')}}
-							{{ Form::select('mass_status', ['' => 'Wybierz nowy status'] + $statuses, null, ['class' => 'form-control input-sm']) }}
-						</span>
-						<span class="input-inline bottom">
-							{{ Form::submit(trans('admin.message.buttons.save'), ['class' => 'btn btn-default btn-sm']) }}
-						</span>
-					</div>
-				</div>
-			</div> <!-- #edit-form  -->
+		<div class="input-row">
+			<span class="input-inline bottom">
+				{{ Form::label('mass_status', 'Zmień status dla zaznaczonych na:')}}
+				{{ Form::select('mass_status', ['' => 'Wybierz nowy status'] + $statuses, null, ['class' => 'form-control input-sm']) }}
+			</span>
+			<span class="input-inline bottom">
+				{{ Form::submit(trans('admin.message.buttons.save'), ['class' => 'btn btn-default btn-sm']) }}
+			</span>
+		</div> <!-- .input-row -->
 
-			{{ Form::close() }}
-		</div>
-	</div>
+		{{ Form::close() }}
+
+	</div> <!-- .col-md-12 -->
 </div> <!-- #orders-table -->
 
 <div id="bottom-pagination" class="row">
 	<div class="col-md-12">
-		<div class="pagination-wrapper">
+		<div class="pagination-wrapper padded">
 			<?php echo $orders->appends(Request::except('page'))->links(); ?>
 		</div>
 	</div>
