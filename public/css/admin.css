@@ -97,8 +97,8 @@ body {
 }
 
 .warning {
-	border-color: #ebccd1;
-	background-color: #f2dede;
+	border-color: #D9534F;
+	/*background-color: #f2dede;*/
 }
 
 .input-inline {

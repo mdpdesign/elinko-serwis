@@ -114,14 +114,14 @@
 						<td class="edit">
 							
 							<div class="btn-group">
-								<a type="button" class="btn btn-default btn-sm btn-details" data-toggle="collapse" data-target=".collapsible-details-{{ $order->id }}">Rozwiń</a>
-								<a class="btn btn-default btn-sm" href="{{ URL::route('admin.orders.show', $order->id) }}">Pokaż</a>
+								<a class="btn btn-default btn-sm btn-details" data-toggle="collapse" data-target=".collapsible-details-{{ $order->id }}">Rozwiń</a>
+								<a class="btn btn-default btn-sm" href="{{ URL::route('admin.orders.edit', $order->id) }}">Edytuj</a>
 								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 									<span class="caret"></span>
 									<span class="sr-only">Pokaż menu</span>
 								</button>
 								<ul class="dropdown-menu" role="menu">
-									<li><a href="{{ URL::route('admin.orders.edit', $order->id) }}"><span class="glyphicon glyphicon-pencil">&nbsp;</span>Edytuj zlecenie</a></li>
+									<li><a href="{{ URL::route('admin.orders.show', $order->id) }}"><span class="glyphicon glyphicon-eye-open">&nbsp;</span>Pokaż zlecenie</a></li>
 									@if (Auth::user()->hasRole('Administrator'))
 									<li><a href="#" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash">&nbsp;</span>Usuń zlecenie</a></li>
 									@endif
