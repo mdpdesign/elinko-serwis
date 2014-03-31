@@ -1,5 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic,700italic&subset=latin,latin-ext);
-
 body {
 	/*font-family: 'Source Sans Pro';*/
 	/*font-size: 15px;*/
@@ -73,24 +71,19 @@ body {
 	margin: 0;
 	padding: 0 10px 10px 10px;
 	background-color: #E6E6E6;
+	overflow: hidden;
 }
 
-.details-shadow {
+.details-wrapper:before {
+	content: "";
 	position: absolute;
-	top: 1px;
+	top: -20px;
 	left: 0;
 	width: 100%;
-	height: 40px;
-	-webkit-box-shadow: inset 0px 20px 20px -20px rgba(0,0,0,0.4);
-	box-shadow: inset 0px 20px 20px -20px rgba(0,0,0,0.4);
+	height: 20px;
+	-webkit-box-shadow: 0 0 25px rgba(0,0,0,0.4);
+	box-shadow: 0 0 25px rgba(0,0,0,0.4);
 }
-
-
-/*.details-table {
-	-webkit-box-shadow: inset 0px 30px 40px 0px rgba(0,0,0,0.3);
-	box-shadow: inset 0px 30px 40px 0px rgba(0,0,0,0.3);
-}*/
-
 
 .input-row {
 	margin-bottom: 1em;

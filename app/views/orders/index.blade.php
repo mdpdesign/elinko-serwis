@@ -123,7 +123,7 @@
 								<ul class="dropdown-menu" role="menu">
 									<li><a href="{{ URL::route('admin.orders.show', $order->id) }}"><span class="glyphicon glyphicon-eye-open">&nbsp;</span>Pokaż zlecenie</a></li>
 									@if (Auth::user()->hasRole('Administrator'))
-									<li><a href="#" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash">&nbsp;</span>Usuń zlecenie</a></li>
+									<li><a class="btn-delete-order" href="#" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash">&nbsp;</span>Usuń zlecenie</a></li>
 									@endif
 									<li class="divider"></li>
 									<li><a href="{{ URL::route('admin.orders.print', $order->id) }}" target="_blank"><span class="glyphicon glyphicon-print">&nbsp;</span>Drukuj potwierdzenie</a></li>
@@ -184,7 +184,6 @@
 											</tr>
 										</tbody>
 									</table><!-- table .details-table -->
-									<div class="details-shadow"></div>
 								</div><!-- .details-wrapper -->
 							</div><!-- .collapsible-details -->
 	

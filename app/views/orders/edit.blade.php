@@ -111,7 +111,7 @@
 
 		<div class="input-row">
 			{{ Form::submit(trans('admin.message.buttons.save'), ['class' => 'btn btn-primary']) }}
-            {{ link_to(URL::previous(), trans('admin.message.buttons.back'), ['class' => 'btn btn-primary']) }}
+            {{ link_to(URL::previous(), trans('admin.message.buttons.back'), ['class' => 'btn btn-default']) }}
 		</div>
 
 	</div>

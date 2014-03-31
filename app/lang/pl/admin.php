@@ -53,6 +53,8 @@ return array(
 		'order_add_new'				=> 'Dodaj nowe zlecenie',
 		'order_fill_all_fields'			=> 'Uzupełnij wszystkie pola',
 		
+		'noprivillages_delete_order'	=> 'Nie masz odpowiednich uprawnień do usuwania zleceń.',
+		
         'order_show'                  => 'Pokaż szczegóły zlecenia',
         'order_added'                 => 'Nowe zlecenie dodane poprawnie.',
         'order_updated'               => 'Zlecenie zapisane poprawnie',

@@ -215,27 +215,45 @@ class OrderController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
+	
+	// jesli aktualnie zalogowany uzytkownik jest administratorem
+		// moze usunac zlecenie
+	
+	// aktualny uzytkownik nie jest administratprem
+		// nie moze usunac zlecenia
+		// przekierowanie spowrotem z inform. o bledach
+	
 	public function destroy($id) {
-		// pobierz kolekcje z bazy
-		$order = $this->orders->findOrFail($id);
+		
+		$current_user = Auth::user();
+		
+		// jesli uzytkownik ma uprawnienia do usuwania zlecen
+		if ($current_user->hasRole('Administrator'))
+		{
+			// pobierz kolekcje z bazy
+			$order = $this->orders->findOrFail($id);
 
-		// jesli jistnieje kolekcja, usun wszystkie powiazania i samo Zlecenie
-		if ($order)
-		{
-			$order->status()->detach();
-			$order->branch()->detach();
-			$order->history()->delete();
-			$order->delete();
-			
-			return Redirect::route('admin.orders.index')->withSuccess( trans('admin.message.order_delete_success') );
+			// jesli jistnieje kolekcja, usun wszystkie powiazania i samo Zlecenie
+			if ($order)
+			{
+				$order->status()->detach();
+				$order->branch()->detach();
+				$order->history()->delete();
+				$order->delete();
+
+				return Redirect::route('admin.orders.index')->withSuccess( trans('admin.message.order_delete_success') );
+			}
+			// nie odnaleziono Zlecenia do usuniacia, blad aplikacji, skontaktuj sie z Administratorem
+			else
+			{
+				return Redirect::route('admin.order.index')->withErrors( trans('admin.message.contact_administrator') );
+			}
 		}
-		// nie odnaleziono Zlecenia do usuniacia, blad aplikacji, skontaktuj sie z Administratorem
-		else
+		// uzytkownik nie ma uprawnien do usuwania zlecen
+		else 
 		{
-			return Redirect::route('admin.order.index')->withErrors( trans('admin.message.contact_administrator') );
+			return Redirect::back()->withErrors( trans('admin.message.noprivillages_delete_order') );
 		}
-		// Jesli cos ogolnie poszlo nie tak
-		return Redirect::route('admin.order.index')->withErrors( trans('admin.message.contact_administrator') );
 	}
 
 
