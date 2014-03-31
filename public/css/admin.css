@@ -141,6 +141,12 @@ body {
 	border-radius: 3px;
 }
 
+td.order-status.status-added {
+	-webkit-box-shadow: -4px 0 0 #d9534f;
+	-moz-box-shadow: -4px 0 0 #d9534f;
+	box-shadow: -4px 0 0 #d9534f;
+}
+
 /* SZEROKOSCI KOLUMN NA LISCIE ZLECEN */
 th.id-column {
 	width: 2%;

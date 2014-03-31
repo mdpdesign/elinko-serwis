@@ -92,7 +92,7 @@
 				<tbody>
 					@foreach ($orders as $order)
 					<tr class="rma-table-heading">
-						<td class="order-status {{ ($order->status->first()->id == 1) ? 'status-one' : 'nic' }}">
+						<td class="order-status {{ ($order->status->first()->id == 1) ? 'status-added' : '' }}">
 							<strong>{{ $order->id }}</strong>
 						</td>
 						<td>{{ Form::checkbox('orderid[]', $order->id) }}</th>
@@ -121,7 +121,6 @@
 									<span class="sr-only">Pokaż menu</span>
 								</button>
 								<ul class="dropdown-menu" role="menu">
-									<li><a href="{{ URL::route('admin.orders.show', $order->id) }}"><span class="glyphicon glyphicon-eye-open">&nbsp;</span>Pokaż zlecenie</a></li>
 									<li><a href="{{ URL::route('admin.orders.edit', $order->id) }}"><span class="glyphicon glyphicon-pencil">&nbsp;</span>Edytuj zlecenie</a></li>
 									@if (Auth::user()->hasRole('Administrator'))
 									<li><a href="#" data-toggle="modal" data-target="#modal-delete" data-order-id="{{ $order->id }}"><span class="glyphicon glyphicon-trash">&nbsp;</span>Usuń zlecenie</a></li>

@@ -53,8 +53,8 @@
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('admin.message.linklabels.orders_home') }}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="{{ route('admin.orders.index') }}"><span class="glyphicon glyphicon-th-list"></span>&nbsp;{{ trans('admin.message.linklabels.orders_home_list') }}</a></li>
-									<li><a href="{{ route('admin.orders.create') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp;{{ trans('admin.message.linklabels.orders_add') }}</a></li>
+									<li><a href="{{ route('admin.orders.index') }}"><span class="glyphicon glyphicon-th-list">&nbsp;</span>{{ trans('admin.message.linklabels.orders_home_list') }}</a></li>
+									<li><a href="{{ route('admin.orders.create') }}"><span class="glyphicon glyphicon-plus">&nbsp;</span>{{ trans('admin.message.linklabels.orders_add') }}</a></li>
 									<li class="divider"></li>
 									<li class="dropdown-header">{{ trans('admin.message.show_orders') }}</li>
 									<li><a class="open-all" href="#">{{ trans('admin.message.show_all') }}</a></li>
