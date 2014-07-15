@@ -77,6 +77,14 @@ return array(
 	| this array to grant expanded functionality to your applications.
 	|
 	*/
+	
+	/*
+	|--------------------------------------------------------------------------
+	| Laravel 4.2 upgrade
+	|--------------------------------------------------------------------------
+	|
+	*/
+	'cipher' => MCRYPT_RIJNDAEL_256,
 
 	'providers' => array(
 
